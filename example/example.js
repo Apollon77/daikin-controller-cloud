@@ -50,7 +50,7 @@ async function main() {
     if (! tokenSet) {
         // start server
         await daikinCloud.initProxyServer();
-        console.log(`Please visit http://${options.proxyOwnIp}:${options.proxyPort} and Login to Daikin Cloud please.`);
+        console.log(`Please visit http://${options.proxyOwnIp}:${options.proxyWebPort} and Login to Daikin Cloud please.`);
         console.log();
 
         // wait for user Login and getting the tokens

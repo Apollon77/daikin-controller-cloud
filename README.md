@@ -11,7 +11,7 @@ The newer Daikin devices sold since 2020 contain a newer Wifi Adapter (e.g. BRP0
 
 This library allows to initially (hopefully once) retrieve tokens by using a proxy to login to the Daikin Cloud. After that these tokens can be used and refreshed to interact with teh devices.
 
-**For more information on the Proxy progress for end users - because you need to trust and whitelist them and such - can be found in PROXY.md!**
+**For more information on the Proxy progress for end users - because you need to trust and whitelist them and such - can be found in [PROXY.md](PROXY.md)!**
 Info: The adapter is not grabbing any username or password, just the created tokens after you logged in.
 
 ## IMPORTANT

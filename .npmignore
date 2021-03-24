@@ -1,0 +1,12 @@
+/example/.http-mitm-proxy
+/example/certs
+/example/keys
+/example/tokenset.json
+
+Gruntfile.js
+tasks
+node_modules
+.git
+.idea
+package-lock.json
+.github

@@ -19,7 +19,7 @@ When you integrate this library please make sure users do not refresh data out o
 ## Install
 For now while being in basic development install from Github:
 
-`npm i Apollon77/daikin-controller-cloud``
+`npm i Apollon77/daikin-controller-cloud`
 
 ## Example:
 See example folder, check the settings (add your own IP at minimum!) and start it with `node example.js`.
@@ -36,6 +36,7 @@ TODO, for now: see example
 * Add Tests
 * Implement internal update of values when a new value is set? Or reload data after a set action automatically?
 * Implement interval data update in library or only from outside?
+* The mitm proxy library is not closing the proxy correct, so the promise never gets resolved ... need to check on that.
 
 
 ## Changelog:

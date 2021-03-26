@@ -56,6 +56,9 @@ https://youtu.be/bHaL9ftU2zc
 
 ![Certificate 4](img/ios_Zertifikat_4.jpg)
 
+**Not done yet!** Make sure iOS fully trusts the certificate. 
+You can check and configure this setting at Settings > General > About > Certificate Trust Settings.
+
 ![Certificate 5](img/ios_Zertifikat_5.jpg)
 
 

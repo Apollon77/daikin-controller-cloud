@@ -22,7 +22,7 @@ async function main() {
     const options = {
         logger: console.log,          // optional, logger function used to log details depending on loglevel
         logLevel: 'info',             // optional, Loglevel of Library, default 'warn' (logs nothing by default)
-        proxyOwnIp: '192.168.178.88', // ???required, if proxy needed: provide own IP or hostname to later access the proxy
+        proxyOwnIp: '192.168.178.88', // required, if proxy needed: provide own IP or hostname to later access the proxy
         proxyPort: 8887,              // required: use this port for the proxy and point your client device to this port
         proxyWebPort: 8889,           // required: use this port for the proxy web interface to get the certificate and start Link for login
         proxyListenBind: '0.0.0.0',   // optional: set this to bind the proxy to a special IP, default is '0.0.0.0'

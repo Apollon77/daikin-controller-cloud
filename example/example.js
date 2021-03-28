@@ -58,10 +58,7 @@ async function main() {
         console.log(`Retrieved tokens, use for future: ${JSON.stringify(resultTokenSet)}`);
 
         // stop Proxy server
-        // TODO issue is that proxy server do not close clean :-(
-        daikinCloud.stopProxyServer().catch(err => {
-            console.log('Error when closing proxy: ' + err);
-        });
+        await daikinCloud.stopProxyServer();
     }
     // show some details about the tokens (could be outdated because first real request is done afterwards
     console.log('Use Token with the following claims: ' + JSON.stringify(daikinCloud.getTokenSet().claims()));

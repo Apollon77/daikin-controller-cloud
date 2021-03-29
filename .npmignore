@@ -10,3 +10,4 @@ node_modules
 .idea
 package-lock.json
 .github
+.eslintrc.json

@@ -42,7 +42,7 @@ TODO, for now: see example
 
 ## Changelog:
 
-### __WORK IN PROGRESS__
+### 0.1.0 (2021-03-29)
 * Initial release version
 
 ### 0.0.x

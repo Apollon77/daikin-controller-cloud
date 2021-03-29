@@ -57,7 +57,10 @@ async function main() {
         const resultTokenSet = await daikinCloud.waitForTokenFromProxy();
         console.log(`Retrieved tokens, use for future: ${JSON.stringify(resultTokenSet)}`);
 
-        // stop Proxy server
+        // stop Proxy server (and wait 1s before we do that to make sure
+        // the success page can be displayed correctly because waitForTokenFromProxy
+        // will resolve before the last request is sent to the browser!
+        await new Promise(resolve => setTimeout(resolve, 1000));
         await daikinCloud.stopProxyServer();
     }
     // show some details about the tokens (could be outdated because first real request is done afterwards

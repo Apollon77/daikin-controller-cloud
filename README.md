@@ -33,7 +33,7 @@ TODO, for now: see example
 * Provide PRs for actual changes and enhancements to code or documentation!
 
 ## Todos
-* Moar documentation, especially for proxy use for endusers and development
+* Mooooaaar documentation, especially for proxy use for endusers and development
 * Add Tests
 * Implement internal update of values when a new value is set? Or reload data after a set action automatically?
 * Implement interval data update in library or only from outside?
@@ -41,6 +41,9 @@ TODO, for now: see example
 
 
 ## Changelog:
+
+### __WORK IN PROGRESS__
+* Initial release version
 
 ### 0.0.x
 * Initial version

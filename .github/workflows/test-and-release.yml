@@ -47,7 +47,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        node-version: [10.x, 12.x, 14.x]
+        node-version: [12.x, 14.x, 16.x]
         os: [ubuntu-latest, windows-latest, macos-latest]
 
     steps:
@@ -71,7 +71,6 @@ jobs:
     if: |
       contains(github.event.head_commit.message, '[skip ci]') == false &&
       github.event_name == 'push' &&
-      github.event.base_ref == 'refs/heads/main' &&
       startsWith(github.ref, 'refs/tags/')
     runs-on: ubuntu-latest
     strategy:

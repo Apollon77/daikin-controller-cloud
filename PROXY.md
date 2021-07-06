@@ -8,6 +8,8 @@ This library performs 2 functions:
 * Running a proxy-server to perform a MITM attack (https://en.wikipedia.org/wiki/Man-in-the-middle_attack) to capture a tokenset
 * Using the captured (or saved) tokens to communicate with Daikin Cloud
 
+This file describes the first step.
+
 ## MITM-attack
 * Start the Proxy. It opens two ports. One port to be set as the Network/Browser proxy on the device where you want to access it. The second provides an simple webpage to start.
 * Open the provided webpage (http://<ip>:8889 by default)

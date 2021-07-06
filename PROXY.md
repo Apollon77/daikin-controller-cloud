@@ -4,20 +4,28 @@
 
 ## General process
 
-* start the Proxy. It opens two ports. One port to be set as the Network/Browser proxy on the device where you want to access it. The second provides an simple webpage to start.
-* Open the provided webpage (http://<ip>:8889 by default)
-* click on First link to get and install the certificate and enable it and such (see below)
+This library performs 2 functions:
+* Running a proxy-server to perform a MITM attack (https://en.wikipedia.org/wiki/Man-in-the-middle_attack) to capture a tokenset
+* Using the captured (or saved) tokens to communicate with Daikin Cloud
+
+This file describes the first step.
+
+## MITM-attack
+### Starting the Proxy 
+Prerequisites: the necessary options in `example.js` are configured according to your situation
+
+* Start the `example.js` file. It opens two ports. 
+1. One port for the proxy-server. This is the port you will configure on the client device's proxy settings (default: 8888).
+1. The second provides an simple webpage to guide you through the process (default: 8889).
+* Open the  webpage (http://<ip>:8889 by default)
+  ![Initial Webpage](img/initial_webpage.png)
+* Click on first link to get and install the certificate and enable it (see below for client device specific flow)
 * When done click on the second Link to login to the Daikin Cloud
 * After a successful login the browser should currently (to be optimized) show an error message (or simply stay on a Daikin page or show a blank page) because the last page is not possible to be opened by any browser. BUT if the console shows success that tokens were able to be catched we are already done!
 
-Info: The adapter is not grabbing any username or password, just the created tokens after you logged in.
+Info: The library is not grabbing any username or password, just the created tokens after you logged in.
 
-TODO: (Support wanted) Describe that whole cert stuff for all sorts of browsers and OS and such
-
-
-## For PCs
-
-In general like https://www.charlesproxy.com/documentation/using-charles/ssl-certificates/ but not with the charles certificate, but the one provided by our Webserver
+## Setting up client device
 
 ### Windows
 
@@ -31,7 +39,7 @@ In general like https://www.charlesproxy.com/documentation/using-charles/ssl-cer
 
 #### Chrome
 
-### Safari
+#### Safari
 
 ### Linux
 

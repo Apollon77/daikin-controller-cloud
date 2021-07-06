@@ -18,6 +18,7 @@ Prerequisites: the necessary options in `example.js` are configured according to
 1. One port for the proxy-server. This is the port you will configure on the client device's proxy settings (default: 8888).
 1. The second provides an simple webpage to guide you through the process (default: 8889).
 * Open the  webpage (http://<ip>:8889 by default)
+  ![Initial Webpage](img/initial_webpage.png)
 * Click on first link to get and install the certificate and enable it (see below for client device specific flow)
 * When done click on the second Link to login to the Daikin Cloud
 * After a successful login the browser should currently (to be optimized) show an error message (or simply stay on a Daikin page or show a blank page) because the last page is not possible to be opened by any browser. BUT if the console shows success that tokens were able to be catched we are already done!

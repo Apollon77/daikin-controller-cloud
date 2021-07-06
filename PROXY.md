@@ -30,27 +30,38 @@ Info: This library is not grabbing any username or password, just the created to
 
 ### Windows
 
-#### Firefox
+Flow below was tested on Chrome and Edge.
 
-#### Chrome
+#### Certificate
+
+* Open the certificate manager: click Start and type 'Manage Computer Certificates'
+* Open the folder 'Trusted Root Certification Autorities' and the subfolder 'Certificates'
+* Right-click the 'Certificates' folder, select All Tasks, Import...
+* Click Next and select the certificate (remove the file-extension filter!) and install
+
+#### Proxy server
+
+* Open the proxy server settings: click Start and type 'Proxy'
+* Enable the proxy server settings and fill in the ip-address and port of the proxy server you are running. Finally hit save
+* Continue the above flow by clicking the last link on the webpage. Afterwards, you can shut down the proxy server, remove the proxy settings from the Network settings and remove the certificate.
 
 ### macOS
   
-  Warning: this project currently does not work on MacOS/Chrome. When visiting the Daikin website, a login-loop occurs. Please use Safari.
+  Warning: this project currently **does not work** on MacOS/Chrome. When visiting the Daikin website, a login-loop occurs. Please use Safari.
+  
+#### Certificate
 
 * Open Keychain Access and select `System` on the lefthand side.
 * Select File -> Import Items and select the `ca.pem` file. There will now be a `NodeMITMProxyCA`-certificate in the System keychain.
 * Double click the certificate, open the Trust section and set 'When using this ceritficate' to 'Always Trust'
+
+#### Proxy server
+
 * Open System Preferences -> Network and select your network adapter.
 * Click Advanced and navigate to the Proxies tab
 * In the Proxies tab, select Secure Web Proxy (HTTPS) and fill in the ip-address and port of the proxy server you are running
 * Continue the above flow by clicking the last link on the webpage. Afterwards, you can shut down the proxy server, remove the proxy settings from the Network settings and remove the certificate.
   
-### Linux
-
-#### Firefox
-
-#### Chrome
 
 ## For mobile Phones
 

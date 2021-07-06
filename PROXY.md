@@ -4,7 +4,12 @@
 
 ## General process
 
-* start the Proxy. It opens two ports. One port to be set as the Network/Browser proxy on the device where you want to access it. The second provides an simple webpage to start.
+This library performs 2 functions:
+* Running a proxy-server to perform a MITM attack (https://en.wikipedia.org/wiki/Man-in-the-middle_attack) to capture a tokenset
+* Using the captured (or saved) tokens to communicate with Daikin Cloud
+
+## MITM-attack
+* Start the Proxy. It opens two ports. One port to be set as the Network/Browser proxy on the device where you want to access it. The second provides an simple webpage to start.
 * Open the provided webpage (http://<ip>:8889 by default)
 * click on First link to get and install the certificate and enable it and such (see below)
 * When done click on the second Link to login to the Daikin Cloud

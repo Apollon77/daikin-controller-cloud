@@ -47,7 +47,7 @@ Flow below was tested on Chrome and Edge.
 
 ### macOS
   
-  Warning: this project currently **does not work** on MacOS/Chrome. When visiting the Daikin website, a login-loop occurs. Please use Safari.
+Warning: this project currently **does not work** on MacOS/Chrome. When visiting the Daikin website, a login-loop occurs. Please use Safari.
   
 #### Certificate
 
@@ -62,38 +62,24 @@ Flow below was tested on Chrome and Edge.
 * In the Proxies tab, select Secure Web Proxy (HTTPS) and fill in the ip-address and port of the proxy server you are running
 * Continue the above flow by clicking the last link on the webpage. Afterwards, you can shut down the proxy server, remove the proxy settings from the Network settings and remove the certificate.
   
-
-## For mobile Phones
-
+  
 ### iOS
 
-**Important: The Proxy is called "NodeMITMProxyCA" and no longer "Anyproxy" since 3.0.0!**
+It is advised to use Safari for these steps. Chrome on iOS does not allow you to directly import a certificate.
 
-https://youtu.be/bHaL9ftU2zc
+#### Certificate
 
-#### Install Certificate
-![Certificate 1](img/ios_Zertifikat_1.jpg)
+* Open the downloaded certificate from Safari. You are alerted that a new certificate has been downloaded.
+* Go to Settings -> General -> Profiles, click NodeMITMProxyCA in the 'Downloaded Profiles' section.
+* Select Install in the upper righthand corner
+* Go back to Settings -> General -> Info -> Thrusted Certificates and activate the NodeMITMProxyCA profile
 
-![Certificate 2](img/ios_Zertifikat_2.jpg)
+#### Proxy server
 
-![Certificate 3](img/ios_Zertifikat_3.jpg)
-
-![Certificate 4](img/ios_Zertifikat_4.jpg)
-
-**Not done yet!** Make sure iOS fully trusts the certificate. 
-You can check and configure this setting at Settings > General > About > Certificate Trust Settings.
-
-![Certificate 5](img/ios_Zertifikat_5.jpg)
-
-
-#### Enable Proxy
-![Proxy 1](img/ios_Proxy_1.jpg)
-
-![Proxy 2](img/ios_Proxy_2.jpg)
-
-![Proxy 3](img/ios_Proxy_3.jpg)
-
-![Proxy 4](img/ios_Proxy_4.jpg)
+* Go to Settings -> Wifi
+* Tap on the `i` next to the Wifi network you are currently connected on (and that also hosts the MITM-proxy)
+* Go to Configure proxy, select Manual and fill in the ip-address and port of the proxy server you are running
+* Continue the above flow by clicking the last link on the webpage. Afterwards, you can shut down the proxy server, remove the proxy settings from the Wifi settings and remove the profile from .
 
 ### Android
 

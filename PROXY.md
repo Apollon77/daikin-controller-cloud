@@ -23,7 +23,7 @@ Prerequisites: the necessary options in `example.js` are configured according to
 * When done click on the second Link to login to the Daikin Cloud
 * After a successful login the browser should currently (to be optimized) show an error message (or simply stay on a Daikin page or show a blank page) because the last page is not possible to be opened by any browser. BUT if the console shows success that tokens were able to be catched we are already done!
 
-Info: The adapter is not grabbing any username or password, just the created tokens after you logged in.
+Info: The library is not grabbing any username or password, just the created tokens after you logged in.
 
 ## Setting up client device
 

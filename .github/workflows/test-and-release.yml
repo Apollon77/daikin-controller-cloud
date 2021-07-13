@@ -102,9 +102,8 @@ jobs:
 
       - name: Install Dependencies
         run: npm ci
-
-#      - name: Create a clean build
-#        run: npm run build
+      - name: Create Tokensaver binaries
+        run: npm run build-tokensaver
       - name: Publish package to npm
         run: |
           npm config set //registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}

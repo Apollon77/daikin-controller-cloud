@@ -34,6 +34,8 @@ From within the main directory, run:
 `node example/tokensaver.js`
 
 Or, more conveniently, use one of the binaries supplied in this repository.
+TODO: add auto-binaries
+
 
 TODO, for now: see example
 

@@ -32,9 +32,6 @@
  
      let tokenSet;
 
-    // Fix EventEmitter memory leak warning
-    process.setMaxListeners(Infinity);
-
     // Set outputfile for tokenset.json
      const tokenFile = path.join(process.cwd(), 'tokenset.json');
      options.logger('Writing tokenset to: ' + tokenFile);

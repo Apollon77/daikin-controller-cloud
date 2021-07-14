@@ -102,6 +102,7 @@ jobs:
 
       - name: Install Dependencies
         run: npm ci
+        #Automatically generate binaries for Win/MacOS/Linux
       - name: Create Tokensaver binaries
         run: npm run build-tokensaver
       - name: Publish package to npm

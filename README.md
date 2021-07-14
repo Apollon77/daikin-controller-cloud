@@ -25,7 +25,18 @@ For now while being in basic development install from Github:
 ## Example:
 See example folder, check the settings (add your own IP at minimum!) and start it with `node example.js`.
 
-## Usage 
+## Using tokensaver.js
+
+If your only interest is to save the tokens exchanged by Daikin Cloud and yourself (for instance, when you want to use them with your own code or home automation), use the tokensaver.js in the `example` folder
+
+From within the main directory, run:
+
+`node example/tokensaver.js`
+
+Or, more conveniently, use one of the binaries supplied in this repository.
+TODO: add auto-binaries
+
+
 TODO, for now: see example
 
 ## Issue reporting and enhancements

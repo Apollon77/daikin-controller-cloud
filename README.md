@@ -12,7 +12,7 @@ The newer Daikin devices sold since 2020 contain a newer Wifi Adapter (e.g. BRP0
 This library allows to initially (hopefully once) retrieve tokens by using a proxy to login to the Daikin Cloud. After that these tokens can be used and refreshed to interact with teh devices.
 
 **For more information on the Proxy progress for end users - because you need to trust and whitelist them and such - can be found in [PROXY.md](PROXY.md)!**
-Info: The adapter is not grabbing any username or password, just the created tokens after you logged in.
+Info: This project is not grabbing any username or password, just the created tokens after you logged in.
 
 ## IMPORTANT
 When you integrate this library please make sure users do not refresh data out of the cloud too fast. Please still think about the needed resources and costs on Daikin side to operate the cloud services and only allow meaningful poll intervals!
@@ -52,6 +52,10 @@ TODO, for now: see example
 
 
 ## Changelog:
+
+### __WORK IN PROGRESS__
+* Added tokensaver.js
+* Added script to auto-generate binaries based on tokensaver.js
 
 ### 0.1.1 (2021-03-29)
 * Initial release version

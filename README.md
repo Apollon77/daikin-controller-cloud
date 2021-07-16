@@ -53,7 +53,7 @@ TODO, for now: see example
 
 ## Changelog:
 
-### __WORK IN PROGRESS__
+### 0.1.3 (2021-07-16)
 * Added tokensaver.js
 * Added script to auto-generate binaries based on tokensaver.js
 

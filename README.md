@@ -22,9 +22,6 @@ For now while being in basic development install from Github:
 
 `npm i Apollon77/daikin-controller-cloud`
 
-## Example:
-See example folder, check the settings (add your own IP at minimum!) and start it with `node example.js`.
-
 ## Using tokensaver.js
 
 If your only interest is to save the tokens exchanged by Daikin Cloud and yourself (for instance, when you want to use them with your own code or home automation), use the tokensaver.js in the `example` folder
@@ -33,11 +30,10 @@ From within the main directory, run:
 
 `node example/tokensaver.js`
 
-Or, more conveniently, use one of the binaries supplied in this repository.
-TODO: add auto-binaries
+Or, more conveniently, use one of the binaries (Linux, macOS and Windows) supplied with the [Releases](https://github.com/Apollon77/daikin-controller-cloud/releases).
 
-
-TODO, for now: see example
+## Code-Usage example
+See example folder, check the settings (add your own IP at minimum!) and start it with `node example.js`.
 
 ## Issue reporting and enhancements
 * Create Issues here in Github

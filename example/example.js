@@ -72,7 +72,7 @@ async function main() {
     const devices = await daikinCloud.getCloudDevices();
 
     if (devices && devices.length) {
-        for (dev of devices) {
+        for (let dev of devices) {
             console.log('Device ' + dev.getId() + ' Data:');
             console.log('    last updated: ' + dev.getLastUpdated());
             console.log('    modelInfo: ' + dev.getData('gateway', 'modelInfo').value);

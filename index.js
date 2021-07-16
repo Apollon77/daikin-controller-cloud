@@ -297,68 +297,52 @@ class DaikinCloudController extends EventEmitter {
      * @public
      */
      async login(userName, password) {
-        const fetch = require('node-fetch');
-        var cookies;
-        var location;
-        var login_token;
+        let cookies;
+        let location;
+        let login_token;
 
         // Extract csrf state cookies
-        var csrfStateCookie;
-        await fetch(this.proxy._generateInitialUrl(), {
-            "redirect": "manual"
-            })
-            .then(res => {
-                let cookies = res.headers.get('set-cookie').split(',');
-                csrfStateCookie = cookies[1].split(';')[0].trim() + "; "
-                    + cookies[3].split(';')[0].trim();
-                location = res.headers.get('location')})
+        let csrfStateCookie;
+        await got(this.proxy._generateInitialUrl(), {
+            followRedirect: false,
+
+        }).then(response => {
+            let cookies = response.headers['set-cookie'];
+            csrfStateCookie = cookies[1].split(';')[0].trim() + "; "
+                + cookies[2].split(';')[0].trim();
+            location = response.headers['location']});
         
         // Extract SAML Context
-        var samlContext;
-        await fetch(location, { "redirect": "manual" })
-            .then(res => location = res.headers.get('location'));
+        let samlContext;
+        //await fetch(location, { "redirect": "manual" })
+        await got(location, { followRedirect: false })
+            .then(response => location = response.headers['location']);
 
         let regex = /samlContext=([^&]+)/g;
         let match = regex.exec(location);
         samlContext = match[1];
 
         // Extract API version
-        var version;
-        await fetch("https://cdns.gigya.com/js/gigya.js?"
-            + "apiKey=3_xRB3jaQ62bVjqXU1omaEsPDVYC0Twi1zfq1zHPu_5HFT0zWkDvZJS97Yw1loJnTm")
-                   .then(res => res.text())
-                   .then(body => {
-                        let regex = /"(\d+-\d-\d+)"/g
-                        let match = regex.exec(body);
-                        version = match[1]});
-
-        var params = new URLSearchParams({
-            "apiKey": "3_xRB3jaQ62bVjqXU1omaEsPDVYC0Twi1zfq1zHPu_5HFT0zWkDvZJS97Yw1loJnTm",
-            "sdk": "js_latest",
-            "format": "json"});
-
+        let version;
+        await got("https://cdns.gigya.com/js/gigya.js", {
+            searchParams: {'apiKey': '3_xRB3jaQ62bVjqXU1omaEsPDVYC0Twi1zfq1zHPu_5HFT0zWkDvZJS97Yw1loJnTm'}
+        }).text()
+        .then(body => {
+            let regex = /"(\d+-\d-\d+)"/g
+            let match = regex.exec(body);
+            version = match[1]});
         
         // Extract the cookies used for the Single Sign On
-        var ssoCookies;
-        await fetch("https://cdc.daikin.eu/accounts.webSdkBootstrap?" + params)
-            .then(res => ssoCookies = res.headers.get('set-cookie').split(','));
+        let ssoCookies;
+        await got("https://cdc.daikin.eu/accounts.webSdkBootstrap", {
+            searchParams: {
+                "apiKey": "3_xRB3jaQ62bVjqXU1omaEsPDVYC0Twi1zfq1zHPu_5HFT0zWkDvZJS97Yw1loJnTm",
+                "sdk": "js_latest",
+                "format": "json"}
+        }).then(response => 
+            ssoCookies = response.headers['set-cookie']);
 
         // Login
-        params = new URLSearchParams({
-            "loginID": userName,
-            "password": password,
-            "sessionExpiration":"31536000",
-            "targetEnv":"jssdk",
-            "include": "profile,",
-            "loginMode": "standard",
-            "riskContext": '{"b0":7527,"b2":4,"b5":1',
-            "APIKey": "3_xRB3jaQ62bVjqXU1omaEsPDVYC0Twi1zfq1zHPu_5HFT0zWkDvZJS97Yw1loJnTm",
-            "sdk": "js_latest",
-            "authMode": "cookie",
-            "pageURL": "https://my.daikin.eu/content/daikinid-cdc-saml/en/login.html?samlContext="+samlContext,
-            "sdkBuild": "12208",
-            "format": "json"});
-
         cookies = ssoCookies[0].split(';')[0].trim() + "; "
             + ssoCookies[2].split(';')[0].trim() + "; "
             + "hasGmid=ver4; "
@@ -367,59 +351,67 @@ class DaikinCloudController extends EventEmitter {
             + "gig_canary_ver_3_QebFXhxEWDc8JhJdBWmvUd1e0AaWJCISbqe4QIHrk_KzNVJFJ4xsJ2UZbl8OIIFY=" + version + "; "
             + "apiDomain_3_QebFXhxEWDc8JhJdBWmvUd1e0AaWJCISbqe4QIHrk_KzNVJFJ4xsJ2UZbl8OIIFY=cdc.daikin.eu; "
         
-        await fetch("https://cdc.daikin.eu/accounts.login", {
+        await got("https://cdc.daikin.eu/accounts.login", {
             "headers": {
                 "content-type": "application/x-www-form-urlencoded",
                 "cookie": cookies},
-            "body": params,
+            searchParams: {
+                "loginID": userName,
+                "password": password,
+                "sessionExpiration":"31536000",
+                "targetEnv":"jssdk",
+                "include": "profile,",
+                "loginMode": "standard",
+                "riskContext": '{"b0":7527,"b2":4,"b5":1',
+                "APIKey": "3_xRB3jaQ62bVjqXU1omaEsPDVYC0Twi1zfq1zHPu_5HFT0zWkDvZJS97Yw1loJnTm",
+                "sdk": "js_latest",
+                "authMode": "cookie",
+                "pageURL": "https://my.daikin.eu/content/daikinid-cdc-saml/en/login.html?samlContext="+samlContext,
+                "sdkBuild": "12208",
+                "format": "json"},
             "method": "POST",
-            })
-            .then(res => res.json())
-            .then(json => login_token = json.sessionInfo.login_token); 
+        }).json()
+        .then(json => login_token = json.sessionInfo.login_token); 
         
-        var date = new Date();
+        let date = new Date();
         date = new Date(date.setTime( date.getTime() + 3600000 ));
 
-        var samlResponse;
-        var relayState;
+        let samlResponse;
+        let relayState;
         cookies = cookies +
             + "glt_3_xRB3jaQ62bVjqXU1omaEsPDVYC0Twi1zfq1zHPu_5HFT0zWkDvZJS97Yw1loJnTm=" + login_token + "; "
             + "gig_loginToken_3_QebFXhxEWDc8JhJdBWmvUd1e0AaWJCISbqe4QIHrk_KzNVJFJ4xsJ2UZbl8OIIFY=" + login_token + "; "
             + "gig_loginToken_3_QebFXhxEWDc8JhJdBWmvUd1e0AaWJCISbqe4QIHrk_KzNVJFJ4xsJ2UZbl8OIIFY_exp=" + date.getTime() + "; "
             + "gig_loginToken_3_QebFXhxEWDc8JhJdBWmvUd1e0AaWJCISbqe4QIHrk_KzNVJFJ4xsJ2UZbl8OIIFY_visited=%2C3_xRB3jaQ62bVjqXU1omaEsPDVYC0Twi1zfq1zHPu_5HFT0zWkDvZJS97Yw1loJnTm;";
         
-        params = new URLSearchParams({
+        await got("https://cdc.daikin.eu/saml/v2.0/3_xRB3jaQ62bVjqXU1omaEsPDVYC0Twi1zfq1zHPu_5HFT0zWkDvZJS97Yw1loJnTm/idp/sso/continue", {
+            searchParams: {
                 "samlContext": samlContext,
-                "loginToken": login_token});
-        await fetch("https://cdc.daikin.eu/saml/v2.0/3_xRB3jaQ62bVjqXU1omaEsPDVYC0Twi1zfq1zHPu_5HFT0zWkDvZJS97Yw1loJnTm/idp/sso/continue?" + params, {
-            "headers": { "cookie": cookies}
-            })
-            .then(res => {
-                return res.text()})
-            .then(body => {
-                let regex = /value="([^"]+=*)"/g;
-                let matches = regex.exec(body);
-                samlResponse = matches[1];
-                matches = regex.exec(body);
-                relayState = matches[1];
-            }); 
+                "loginToken": login_token},
+            headers: { "cookie": cookies}
+        }).text()
+        .then(body => {
+            let regex = /value="([^"]+=*)"/g;
+            let matches = regex.exec(body);
+            samlResponse = matches[1];
+            matches = regex.exec(body);
+            relayState = matches[1];
+        }); 
 
         // Fetch the daikinunified URL
-        var daikinunified;
-        params = new URLSearchParams({
+        let daikinunified;
+        const params = new URLSearchParams({
             "SAMLResponse": samlResponse,
             "RelayState": relayState});
 
-        await fetch("https://daikin-unicloud-prod.auth.eu-west-1.amazoncognito.com/saml2/idpresponse", {
-            "headers": {
+        await got.post("https://daikin-unicloud-prod.auth.eu-west-1.amazoncognito.com/saml2/idpresponse", {
+            headers: {
                 "content-type": "application/x-www-form-urlencoded",
                 "cookie": csrfStateCookie
             },
-            "body": params,
-            "method": "POST",
-            "redirect": "manual"
-            })
-            .then(res => daikinunified = res.headers.get('location'));
+            body: params.toString(),
+            followRedirect: false
+        }).then(response => daikinunified = response.headers['location']);
 
         this.proxy._retrieveTokens(daikinunified);
     }

@@ -130,7 +130,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./
+          asset_path: ./tokensaver-win.exe
           asset_name: tokensaver-win.exe
           asset_content_type: application/vnd.microsoft.portable-executable
       - name: Upload Tokensaver binary MacOS
@@ -140,7 +140,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./
+          asset_path: ./tokensaver-macos
           asset_name: tokensaver-macos
           asset_content_type: application/mac-binhex40
       - name: Upload Tokensaver binary Linux
@@ -150,6 +150,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./
+          asset_path: ./tokensaver-linux
           asset_name: tokensaver-linux
           asset_content_type: application/x-executable

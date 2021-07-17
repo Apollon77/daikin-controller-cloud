@@ -33,31 +33,38 @@
      let tokenSet;
 
     // Set outputfile for tokenset.json
-     const tokenFile = path.join(process.cwd(), 'tokenset.json');
-     options.logger('Writing tokenset to: ' + tokenFile);
+    const tokenFile = path.join(process.cwd(), 'tokenset.json');
+    options.logger('Writing tokenset to: ' + tokenFile);
      
  
-     // Initialize Daikin Cloud Instance
-     const daikinCloud = new DaikinCloud(tokenSet, options);
+    // Initialize Daikin Cloud Instance
+    const daikinCloud = new DaikinCloud(tokenSet, options);
  
-     // Event that will be triggered on new or updated tokens, save into file
-     daikinCloud.on('token_update', tokenSet => {
-         console.log(`UPDATED tokens, use for future and wrote to tokenset.json`);
-         fs.writeFileSync(tokenFile, JSON.stringify(tokenSet));
-     });
+    // Event that will be triggered on new or updated tokens, save into file
+    daikinCloud.on('token_update', tokenSet => {
+        console.log(`UPDATED tokens, use for future and wrote to tokenset.json`);
+        fs.writeFileSync(tokenFile, JSON.stringify(tokenSet));
+    });
  
-    await daikinCloud.initProxyServer();
-    console.log(`Please visit http://${options.proxyOwnIp}:${options.proxyWebPort} and Login to Daikin Cloud please.`);
-    // wait for user Login and getting the tokens
-    const resultTokenSet = await daikinCloud.waitForTokenFromProxy();
-    console.log('Retrieved tokens. Saved to ' + tokenFile);
-    //console.log(`Retrieved tokens, use for future: ${JSON.stringify(resultTokenSet)}`);
- 
-    // stop Proxy server (and wait 1s before we do that to make sure
-    // the success page can be displayed correctly because waitForTokenFromProxy
-    // will resolve before the last request is sent to the browser!
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    await daikinCloud.stopProxyServer();
+    let args = process.argv.slice(2);
+    if (args.length == 2 && args[0].includes('@')) {
+        const resultTokenSet = await daikinCloud.login(args[0], args[1]); 
+        console.log('Retrieved tokens. Saved to ' + tokenFile);      
+    } else {
+        await daikinCloud.initProxyServer();
+    
+        console.log(`Please visit http://${options.proxyOwnIp}:${options.proxyWebPort} and Login to Daikin Cloud please.`);
+        // wait for user Login and getting the tokens
+        const resultTokenSet = await daikinCloud.waitForTokenFromProxy();
+        console.log('Retrieved tokens. Saved to ' + tokenFile);
+        //console.log(`Retrieved tokens, use for future: ${JSON.stringify(resultTokenSet)}`);
+    
+        // stop Proxy server (and wait 1s before we do that to make sure
+        // the success page can be displayed correctly because waitForTokenFromProxy
+        // will resolve before the last request is sent to the browser!
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        await daikinCloud.stopProxyServer();
+    }
     process.exit();
  }
  

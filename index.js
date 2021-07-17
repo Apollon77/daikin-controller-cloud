@@ -291,12 +291,30 @@ class DaikinCloudController extends EventEmitter {
 
     /**
      * Returns the Tokens using mail authentication
+     * @emits DaikinCloudController#token_update
      * @param {string} userName Mail address oassociated with the account
      * @param {string} password Password of the account
      * @returns {Promise<any>} Instance of openid-client.TokenSet with tokens
      * @public
      */
      async login(userName, password) {
+        Proxy = Proxy || require('./lib/proxy');
+
+        // Initiate proxy without starting it
+        if (!this.proxy) {
+            const proxyOptions = {
+                proxyOwnIp: this.options.proxyOwnIp,
+                proxyListenBind: this.options.proxyListenBind,
+                proxyPort: this.options.proxyPort,
+                proxyWebPort: this.options.proxyWebPort,
+                proxyDataDir: this.options.proxyDataDir,
+                logLevel: this.options.logLevel,
+                logger: this.options.logger
+            };
+
+            this.proxy = new Proxy(this.openIdClient, proxyOptions);
+        }
+
         let cookies;
         let location;
         let login_token;
@@ -413,7 +431,18 @@ class DaikinCloudController extends EventEmitter {
             followRedirect: false
         }).then(response => daikinunified = response.headers['location']);
 
-        this.proxy._retrieveTokens(daikinunified);
+        this.tokenSet = await this.proxy._retrieveTokens(daikinunified);
+
+        /**
+         * Inform the using application about changed Tokens (in this case it are new received tokens)
+         * to store on application side
+         *
+         * @event DaikinCloudController#token_update
+         * @property {TokenSet} Instance of openid-client-TokenSet with updated tokens
+         **/
+
+         this.emit('token_update', this.tokenSet);
+         return this.tokenSet;
     }
 }
 

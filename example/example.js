@@ -4,6 +4,9 @@
  * This example will open a Proxy Server when no tokens are provided
  * to allow a Login with the Daikin Cloud to get the needed tokens.
  *
+ * For an example on how to use the automatic Username/Password Login
+ * please refer to tokensaver.js
+ *
  * The tokens will be stored in a tokenset.json file in the example
  * directory and this file is also loaded on startup.
  *

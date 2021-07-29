@@ -49,12 +49,16 @@ See example folder, check the settings (add your own IP at minimum!) and start i
 
 ## Changelog:
 
+### __WORK IN PROGRESS__
+* (csu333) Add direct login method using email/password as second option beside proxy
+* (csu333) Add direct login also to tokensaver.js
+
 ### 0.1.3 (2021-07-16)
-* Added tokensaver.js
-* Added script to auto-generate binaries based on tokensaver.js
+* (gigatexel ) Added tokensaver.js
+* (gigatexel/Apollon77) Added script to auto-generate binaries based on tokensaver.js
 
 ### 0.1.1 (2021-03-29)
-* Initial release version
+* (Apollon77) Initial release version
 
 ### 0.0.x
-* Initial version
+* (Apollon77) Initial version

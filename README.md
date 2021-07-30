@@ -49,7 +49,7 @@ See example folder, check the settings (add your own IP at minimum!) and start i
 
 ## Changelog:
 
-### __WORK IN PROGRESS__
+### 0.2.0 (2021-07-30)
 * (csu333) Add direct login method using email/password as second option beside proxy
 * (csu333) Add direct login also to tokensaver.js
 

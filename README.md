@@ -32,6 +32,15 @@ From within the main directory, run:
 
 Or, more conveniently, use one of the binaries (Linux, macOS and Windows) supplied with the [Releases](https://github.com/Apollon77/daikin-controller-cloud/releases).
 
+Calling tokensaver.js without any parameters will open a proxy where you can login to the Daikin Cloud and the tokens will be fetched.
+
+Alternatively execute
+
+`node tokensaver.js "mydaikin@email.com" "my-daikin-password"`
+
+(replace data with your daikin cloud login credentials) and we try to fetch the tokens without the proxy.
+
+
 ## Code-Usage example
 See example folder, check the settings (add your own IP at minimum!) and start it with `node example.js`.
 

@@ -323,7 +323,11 @@ class DaikinCloudController extends EventEmitter {
         let csrfStateCookie;
         try {
             const response = await got(this.proxy._generateInitialUrl(), {
-                followRedirect: false
+                followRedirect: false,
+                timeout: {
+                    response: 5000,
+                    request: 5000
+                }
             });
 
             let cookies = response.headers['set-cookie'];
@@ -339,7 +343,13 @@ class DaikinCloudController extends EventEmitter {
         let samlContext;
 
         try {
-            const response = await got(location, { followRedirect: false })
+            const response = await got(location, {
+                followRedirect: false,
+                timeout: {
+                    response: 5000,
+                    request: 5000
+                }
+            })
             location = response.headers['location'];
 
             let regex = /samlContext=([^&]+)/g;
@@ -355,7 +365,11 @@ class DaikinCloudController extends EventEmitter {
 
         try {
             const body = await got('https://cdns.gigya.com/js/gigya.js', {
-                searchParams: {'apiKey': '3_xRB3jaQ62bVjqXU1omaEsPDVYC0Twi1zfq1zHPu_5HFT0zWkDvZJS97Yw1loJnTm'}
+                searchParams: { 'apiKey': '3_xRB3jaQ62bVjqXU1omaEsPDVYC0Twi1zfq1zHPu_5HFT0zWkDvZJS97Yw1loJnTm' },
+                timeout: {
+                    response: 5000,
+                    request: 5000
+                }
             }).text();
             let regex = /"(\d+-\d-\d+)"/g
             let match = regex.exec(body);
@@ -372,7 +386,12 @@ class DaikinCloudController extends EventEmitter {
                 searchParams: {
                     'apiKey': '3_xRB3jaQ62bVjqXU1omaEsPDVYC0Twi1zfq1zHPu_5HFT0zWkDvZJS97Yw1loJnTm',
                     'sdk': 'js_latest',
-                    'format': 'json'}
+                    'format': 'json'
+                },
+                timeout: {
+                    response: 5000,
+                    request: 5000
+                }
             });
             ssoCookies = response.headers['set-cookie'];
         } catch (err) {
@@ -393,7 +412,8 @@ class DaikinCloudController extends EventEmitter {
             const json = await got('https://cdc.daikin.eu/accounts.login', {
                 'headers': {
                     'content-type': 'application/x-www-form-urlencoded',
-                    'cookie': cookies},
+                    'cookie': cookies
+                },
                 searchParams: {
                     'loginID': userName,
                     'password': password,
@@ -407,8 +427,13 @@ class DaikinCloudController extends EventEmitter {
                     'authMode': 'cookie',
                     'pageURL': 'https://my.daikin.eu/content/daikinid-cdc-saml/en/login.html?samlContext=' + samlContext,
                     'sdkBuild': '12208',
-                    'format': 'json'},
+                    'format': 'json'
+                },
                 'method': 'POST',
+                timeout: {
+                    response: 5000,
+                    request: 5000
+                }
             }).json();
 
             if (json && json.errorCode === 0 && json.sessionInfo && json.sessionInfo.login_token) {
@@ -436,6 +461,10 @@ class DaikinCloudController extends EventEmitter {
                     'loginToken': login_token},
                 headers: {
                     'cookie': cookies
+                },
+                timeout: {
+                    response: 5000,
+                    request: 5000
                 }
             }).text();
 
@@ -463,7 +492,11 @@ class DaikinCloudController extends EventEmitter {
                     'cookie': csrfStateCookie
                 },
                 body: params.toString(),
-                followRedirect: false
+                followRedirect: false,
+                timeout: {
+                    response: 5000,
+                    request: 5000
+                }
             });
             daikinunified = response.headers['location'];
 

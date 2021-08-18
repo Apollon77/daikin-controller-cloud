@@ -330,7 +330,8 @@ class DaikinCloudController extends EventEmitter {
                 },
                 retry: {
                     retries: 3,
-                    errorCodes: ['ETIMEDOUT']
+                    errorCodes: ['ETIMEDOUT'],
+                    methods: ['GET', 'POST']
                 }
             });
 
@@ -380,7 +381,8 @@ class DaikinCloudController extends EventEmitter {
                 },
                 retry: {
                     retries: 3,
-                    errorCodes: ['ETIMEDOUT']
+                    errorCodes: ['ETIMEDOUT'],
+                    methods: ['GET', 'POST']
                 }
             }).text();
             let regex = /"(\d+-\d-\d+)"/g
@@ -406,7 +408,8 @@ class DaikinCloudController extends EventEmitter {
                 },
                 retry: {
                     retries: 3,
-                    errorCodes: ['ETIMEDOUT']
+                    errorCodes: ['ETIMEDOUT'],
+                    methods: ['GET', 'POST']
                 }
             });
             ssoCookies = response.headers['set-cookie'];
@@ -452,7 +455,8 @@ class DaikinCloudController extends EventEmitter {
                 },
                 retry: {
                     retries: 3,
-                    errorCodes: ['ETIMEDOUT']
+                    errorCodes: ['ETIMEDOUT'],
+                    methods: ['GET', 'POST']
                 }
             }).json();
 
@@ -488,7 +492,8 @@ class DaikinCloudController extends EventEmitter {
                 },
                 retry: {
                     retries: 3,
-                    errorCodes: ['ETIMEDOUT']
+                    errorCodes: ['ETIMEDOUT'],
+                    methods: ['GET', 'POST']
                 }
             }).text();
 
@@ -523,7 +528,8 @@ class DaikinCloudController extends EventEmitter {
                 },
                 retry: {
                     retries: 3,
-                    errorCodes: ['ETIMEDOUT']
+                    errorCodes: ['ETIMEDOUT'],
+                    methods: ['GET', 'POST']
                 }
             });
             daikinunified = response.headers['location'];

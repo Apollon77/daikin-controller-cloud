@@ -93,6 +93,15 @@ class DaikinCloudController extends EventEmitter {
                         return response;
                     }
                 ]
+            },
+            timeout: {
+                response: this.options.communicationTimeout,
+                request: this.options.communicationTimeout
+            },
+            retry: {
+                retries: this.options.communicationRetries,
+                errorCodes: ['ETIMEDOUT'],
+                methods: ['GET', 'POST']
             }
         });
     }

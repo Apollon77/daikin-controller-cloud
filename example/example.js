@@ -31,7 +31,7 @@ async function main() {
         proxyListenBind: '0.0.0.0',   // optional: set this to bind the proxy to a special IP, default is '0.0.0.0'
         proxyDataDir: __dirname,      // Directory to store certificates and other proxy relevant data to
         communicationTimeout: 10000,  // Amount of ms to wait for request and responses before timeout
-        communicationRetries: 3       // Amount of retries when connection times out
+        communicationRetries: 3       // Amount of retries when connection timed out
     };
 
     let tokenSet;

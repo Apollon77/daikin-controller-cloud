@@ -21,6 +21,8 @@ class DaikinCloudController extends EventEmitter {
      * @param {object} options.proxyDataDir Data directory to store certificates and other needed files, defaults to library root directory
      * @param {function} [options.logger=console.log] Logger function
      * @param {string} [options.logLevel=info] Loglevel to use - in fact only "debug" has a meaning to log some more details
+     * @param {object} options.communicationTimeout=10000 Timeout in ms for Requests & Responses for User/Pass Authentication
+     * @param {object} options.communicationRetries=3 Number of Retries if Authentication Requests timed out 
      */
     constructor(tokenSet, options) {
         super();
@@ -34,7 +36,9 @@ class DaikinCloudController extends EventEmitter {
             proxyPort: 8888,
             proxyWebPort: 8889,
             proxyDataDir: path.join(__dirname),
-            logger: null
+            logger: null,
+            communicationRetries: 3,
+            communicationTimeout: 10000
         };
         if (!this.options.logLevel) {
             this.options.logLevel = 'info';
@@ -195,6 +199,15 @@ class DaikinCloudController extends EventEmitter {
                         return response;
                     }
                 ]
+            },
+            timeout: {
+                response: this.options.communicationTimeout,
+                request: this.options.communicationTimeout
+            },
+            retry: {
+                retries: this.options.communicationRetries,
+                errorCodes: ['ETIMEDOUT'],
+                methods: ['GET', 'POST']
             }
         });
 
@@ -325,11 +338,11 @@ class DaikinCloudController extends EventEmitter {
             const response = await got(this.proxy._generateInitialUrl(), {
                 followRedirect: false,
                 timeout: {
-                    response: 10000,
-                    request: 10000
+                    response: this.options.communicationTimeout,
+                    request: this.options.communicationTimeout
                 },
                 retry: {
-                    retries: 3,
+                    retries: this.options.communicationRetries,
                     errorCodes: ['ETIMEDOUT'],
                     methods: ['GET', 'POST']
                 }
@@ -351,12 +364,13 @@ class DaikinCloudController extends EventEmitter {
             const response = await got(location, {
                 followRedirect: false,
                 timeout: {
-                    response: 10000,
-                    request: 10000
+                    response: this.options.communicationTimeout,
+                    request: this.options.communicationTimeout
                 },
                 retry: {
-                    retries: 3,
-                    errorCodes: ['ETIMEDOUT']
+                    retries: this.options.communicationRetries,
+                    errorCodes: ['ETIMEDOUT'],
+                    methods: ['GET', 'POST']
                 }
             })
             location = response.headers['location'];
@@ -376,11 +390,11 @@ class DaikinCloudController extends EventEmitter {
             const body = await got('https://cdns.gigya.com/js/gigya.js', {
                 searchParams: { 'apiKey': '3_xRB3jaQ62bVjqXU1omaEsPDVYC0Twi1zfq1zHPu_5HFT0zWkDvZJS97Yw1loJnTm' },
                 timeout: {
-                    response: 10000,
-                    request: 10000
+                    response: this.options.communicationTimeout,
+                    request: this.options.communicationTimeout
                 },
                 retry: {
-                    retries: 3,
+                    retries: this.options.communicationRetries,
                     errorCodes: ['ETIMEDOUT'],
                     methods: ['GET', 'POST']
                 }
@@ -403,11 +417,11 @@ class DaikinCloudController extends EventEmitter {
                     'format': 'json'
                 },
                 timeout: {
-                    response: 10000,
-                    request: 10000
+                    response: this.options.communicationTimeout,
+                    request: this.options.communicationTimeout
                 },
                 retry: {
-                    retries: 3,
+                    retries: this.options.communicationRetries,
                     errorCodes: ['ETIMEDOUT'],
                     methods: ['GET', 'POST']
                 }
@@ -450,11 +464,11 @@ class DaikinCloudController extends EventEmitter {
                 },
                 'method': 'POST',
                 timeout: {
-                    response: 10000,
-                    request: 10000
+                    response: this.options.communicationTimeout,
+                    request: this.options.communicationTimeout
                 },
                 retry: {
-                    retries: 3,
+                    retries: this.options.communicationRetries,
                     errorCodes: ['ETIMEDOUT'],
                     methods: ['GET', 'POST']
                 }
@@ -487,11 +501,11 @@ class DaikinCloudController extends EventEmitter {
                     'cookie': cookies
                 },
                 timeout: {
-                    response: 10000,
-                    request: 10000
+                    response: this.options.communicationTimeout,
+                    request: this.options.communicationTimeout
                 },
                 retry: {
-                    retries: 3,
+                    retries: this.options.communicationRetries,
                     errorCodes: ['ETIMEDOUT'],
                     methods: ['GET', 'POST']
                 }
@@ -523,11 +537,11 @@ class DaikinCloudController extends EventEmitter {
                 body: params.toString(),
                 followRedirect: false,
                 timeout: {
-                    response: 10000,
-                    request: 10000
+                    response: this.options.communicationTimeout,
+                    request: this.options.communicationTimeout
                 },
                 retry: {
-                    retries: 3,
+                    retries: this.options.communicationRetries,
                     errorCodes: ['ETIMEDOUT'],
                     methods: ['GET', 'POST']
                 }

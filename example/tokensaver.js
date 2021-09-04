@@ -28,7 +28,9 @@
          proxyPort: 8888,              // required: use this port for the proxy and point your client device to this port
          proxyWebPort: 8889,           // required: use this port for the proxy web interface to get the certificate and start Link for login
          proxyListenBind: '0.0.0.0',   // optional: set this to bind the proxy to a special IP, default is '0.0.0.0'
-         proxyDataDir: process.cwd()   // Directory to store certificates and other proxy relevant data to
+         proxyDataDir: process.cwd(),  // Directory to store certificates and other proxy relevant data to
+         communicationTimeout: 10000,  // Amount of ms to wait for request and responses before timeout
+         communicationRetries: 3       // Amount of retries when connection timed out
      };
 
      let tokenSet;

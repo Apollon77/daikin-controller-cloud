@@ -1,15 +1,10 @@
 /**
  * Example Script to use the Daikin-Controller-Cloud library
  *
- * This example will open a Proxy Server or use Username/Password
- * login if data are provided when no tokens are provided to allow
- * a Login with the Daikin Cloud to get the needed tokens.
- *
- * The tokens will be stored in a tokenset.json file in the example
- * directory and this file is also loaded on startup.
- *
- * When tokens exist (or were successfully retrieved) the device list
- * is requested from the cloud account and shown as json.
+ * This example will use Username/Password from environment variable
+ * DAIKIN_USERNAME and DAIKIN_PASSWORD and outputs data out to stderr
+ * 
+ * DAIKIN_USERNAME='x' DAIKIN_PASSWORD='y' node data_collector.js 2> data.json
  */
 
 const DaikinCloud = require('../index');
@@ -27,19 +22,7 @@ async function main() {
     fs.writeFileSync('/dev/stderr', JSON.stringify(daikinDeviceDetails));
 
     async function initDaikinCloud() {
-        /**
-         * Options to initialize the DaikinCloud instance with
-         */
-        const options = {
-            logger: console.log,          // optional, logger function used to log details depending on loglevel
-            logLevel: 'info',             // optional, Loglevel of Library, default 'warn' (logs nothing by default)
-            proxyOwnIp: '127.0.0.1',      // required, if proxy needed: provide own IP or hostname to later access the proxy
-            proxyPort: 8888,              // required: use this port for the proxy and point your client device to this port
-            proxyWebPort: 8889,           // required: use this port for the proxy web interface to get the certificate and start Link for login
-            proxyListenBind: '127.0.0.1', // optional: set this to bind the proxy to a special IP, default is '0.0.0.0'
-            proxyDataDir: process.cwd()   // Directory to store certificates and other proxy relevant data to
-        };
-        const daikinCloud = new DaikinCloud({}, options);
+        const daikinCloud = new DaikinCloud();
         const { username, password } = retrieveCredentials();
         console.log("logging into ...");
         await daikinCloud.login(username, password);
@@ -61,6 +44,6 @@ async function main() {
 }
 
 (async () => {
-    await main(); process.exit();
+    await main();
 })();
 

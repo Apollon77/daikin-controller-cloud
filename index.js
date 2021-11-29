@@ -21,6 +21,8 @@ class DaikinCloudController extends EventEmitter {
      * @param {object} options.proxyDataDir Data directory to store certificates and other needed files, defaults to library root directory
      * @param {function} [options.logger=console.log] Logger function
      * @param {string} [options.logLevel=info] Loglevel to use - in fact only "debug" has a meaning to log some more details
+     * @param {number} options.communicationTimeout=10000 Timeout in ms for Requests & Responses to Cloud
+     * @param {number} options.communicationRetries=3 Number of Retries if Authentication Requests timed out 
      */
     constructor(tokenSet, options) {
         super();
@@ -34,10 +36,18 @@ class DaikinCloudController extends EventEmitter {
             proxyPort: 8888,
             proxyWebPort: 8889,
             proxyDataDir: path.join(__dirname),
-            logger: null
+            logger: null,
+            communicationRetries: 3,
+            communicationTimeout: 10000
         };
         if (!this.options.logLevel) {
             this.options.logLevel = 'info';
+        }
+        if (!this.options.communicationRetries) {
+            this.options.communicationRetries = 3;
+        }
+        if (!this.options.communicationTimeout) {
+            this.options.communicationTimeout = 10000;
         }
 
         if (tokenSet && !(tokenSet instanceof TokenSet)) {
@@ -89,6 +99,15 @@ class DaikinCloudController extends EventEmitter {
                         return response;
                     }
                 ]
+            },
+            timeout: {
+                response: this.options.communicationTimeout,
+                request: this.options.communicationTimeout
+            },
+            retry: {
+                retries: this.options.communicationRetries,
+                errorCodes: ['ETIMEDOUT'],
+                methods: ['GET', 'POST']
             }
         });
     }
@@ -195,6 +214,15 @@ class DaikinCloudController extends EventEmitter {
                         return response;
                     }
                 ]
+            },
+            timeout: {
+                response: this.options.communicationTimeout,
+                request: this.options.communicationTimeout
+            },
+            retry: {
+                retries: this.options.communicationRetries,
+                errorCodes: ['ETIMEDOUT'],
+                methods: ['GET', 'POST']
             }
         });
 
@@ -323,7 +351,16 @@ class DaikinCloudController extends EventEmitter {
         let csrfStateCookie;
         try {
             const response = await got(this.proxy._generateInitialUrl(), {
-                followRedirect: false
+                followRedirect: false,
+                timeout: {
+                    response: this.options.communicationTimeout,
+                    request: this.options.communicationTimeout
+                },
+                retry: {
+                    retries: this.options.communicationRetries,
+                    errorCodes: ['ETIMEDOUT'],
+                    methods: ['GET', 'POST']
+                }
             });
 
             let cookies = response.headers['set-cookie'];
@@ -339,7 +376,18 @@ class DaikinCloudController extends EventEmitter {
         let samlContext;
 
         try {
-            const response = await got(location, { followRedirect: false })
+            const response = await got(location, {
+                followRedirect: false,
+                timeout: {
+                    response: this.options.communicationTimeout,
+                    request: this.options.communicationTimeout
+                },
+                retry: {
+                    retries: this.options.communicationRetries,
+                    errorCodes: ['ETIMEDOUT'],
+                    methods: ['GET', 'POST']
+                }
+            })
             location = response.headers['location'];
 
             let regex = /samlContext=([^&]+)/g;
@@ -355,7 +403,16 @@ class DaikinCloudController extends EventEmitter {
 
         try {
             const body = await got('https://cdns.gigya.com/js/gigya.js', {
-                searchParams: {'apiKey': '3_xRB3jaQ62bVjqXU1omaEsPDVYC0Twi1zfq1zHPu_5HFT0zWkDvZJS97Yw1loJnTm'}
+                searchParams: { 'apiKey': '3_xRB3jaQ62bVjqXU1omaEsPDVYC0Twi1zfq1zHPu_5HFT0zWkDvZJS97Yw1loJnTm' },
+                timeout: {
+                    response: this.options.communicationTimeout,
+                    request: this.options.communicationTimeout
+                },
+                retry: {
+                    retries: this.options.communicationRetries,
+                    errorCodes: ['ETIMEDOUT'],
+                    methods: ['GET', 'POST']
+                }
             }).text();
             let regex = /"(\d+-\d-\d+)"/g
             let match = regex.exec(body);
@@ -372,7 +429,17 @@ class DaikinCloudController extends EventEmitter {
                 searchParams: {
                     'apiKey': '3_xRB3jaQ62bVjqXU1omaEsPDVYC0Twi1zfq1zHPu_5HFT0zWkDvZJS97Yw1loJnTm',
                     'sdk': 'js_latest',
-                    'format': 'json'}
+                    'format': 'json'
+                },
+                timeout: {
+                    response: this.options.communicationTimeout,
+                    request: this.options.communicationTimeout
+                },
+                retry: {
+                    retries: this.options.communicationRetries,
+                    errorCodes: ['ETIMEDOUT'],
+                    methods: ['GET', 'POST']
+                }
             });
             ssoCookies = response.headers['set-cookie'];
         } catch (err) {
@@ -393,7 +460,8 @@ class DaikinCloudController extends EventEmitter {
             const json = await got('https://cdc.daikin.eu/accounts.login', {
                 'headers': {
                     'content-type': 'application/x-www-form-urlencoded',
-                    'cookie': cookies},
+                    'cookie': cookies
+                },
                 searchParams: {
                     'loginID': userName,
                     'password': password,
@@ -407,8 +475,18 @@ class DaikinCloudController extends EventEmitter {
                     'authMode': 'cookie',
                     'pageURL': 'https://my.daikin.eu/content/daikinid-cdc-saml/en/login.html?samlContext=' + samlContext,
                     'sdkBuild': '12208',
-                    'format': 'json'},
+                    'format': 'json'
+                },
                 'method': 'POST',
+                timeout: {
+                    response: this.options.communicationTimeout,
+                    request: this.options.communicationTimeout
+                },
+                retry: {
+                    retries: this.options.communicationRetries,
+                    errorCodes: ['ETIMEDOUT'],
+                    methods: ['GET', 'POST']
+                }
             }).json();
 
             if (json && json.errorCode === 0 && json.sessionInfo && json.sessionInfo.login_token) {
@@ -436,6 +514,15 @@ class DaikinCloudController extends EventEmitter {
                     'loginToken': login_token},
                 headers: {
                     'cookie': cookies
+                },
+                timeout: {
+                    response: this.options.communicationTimeout,
+                    request: this.options.communicationTimeout
+                },
+                retry: {
+                    retries: this.options.communicationRetries,
+                    errorCodes: ['ETIMEDOUT'],
+                    methods: ['GET', 'POST']
                 }
             }).text();
 
@@ -463,7 +550,16 @@ class DaikinCloudController extends EventEmitter {
                     'cookie': csrfStateCookie
                 },
                 body: params.toString(),
-                followRedirect: false
+                followRedirect: false,
+                timeout: {
+                    response: this.options.communicationTimeout,
+                    request: this.options.communicationTimeout
+                },
+                retry: {
+                    retries: this.options.communicationRetries,
+                    errorCodes: ['ETIMEDOUT'],
+                    methods: ['GET', 'POST']
+                }
             });
             daikinunified = response.headers['location'];
 

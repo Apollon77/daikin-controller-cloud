@@ -21,7 +21,7 @@ class DaikinCloudController extends EventEmitter {
      * @param {object} options.proxyDataDir Data directory to store certificates and other needed files, defaults to library root directory
      * @param {function} [options.logger=console.log] Logger function
      * @param {string} [options.logLevel=info] Loglevel to use - in fact only "debug" has a meaning to log some more details
-     * @param {object} options.communicationTimeout=10000 Timeout in ms for Requests & Responses to Cloud
+     * @param {number} options.communicationTimeout=10000 Timeout in ms for Requests & Responses to Cloud
      * @param {object} options.communicationRetries=3 Number of Retries if Authentication Requests timed out 
      */
     constructor(tokenSet, options) {

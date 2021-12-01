@@ -18,7 +18,7 @@
   },
   "devDependencies": {
     "@alcalzone/release-script": "^2.2.1",
-    "pkg": "^5.4.1"
+    "pkg": "^5.5.1"
   },
   "repository": {
     "type": "git",

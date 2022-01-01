@@ -13,7 +13,7 @@
     "finalhandler": "^1.1.2",
     "got": "^11.8.3",
     "http-mitm-proxy": "^0.9.0",
-    "openid-client": "^4.7.5",
+    "openid-client": "^5.1.1",
     "serve-static": "^1.14.2"
   },
   "devDependencies": {

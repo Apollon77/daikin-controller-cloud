@@ -57,8 +57,7 @@ See example folder, check the settings (add your own IP at minimum!) and start i
 
 
 ## Changelog:
-
-### __WORK IN PROGRESS__
+### 0.2.1 (2022-02-20)
 * (uKL) Expose isCloudConnectionUp as own method on device
 * (uKL) prevent crash when some data from devices are still null after new addition to cloud
 * (DrHauss ) Added timeout and retry to got requests

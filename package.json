@@ -17,7 +17,7 @@
     "serve-static": "^1.14.2"
   },
   "devDependencies": {
-    "@alcalzone/release-script": "^3.5.2",
+    "@alcalzone/release-script": "^3.5.6",
     "pkg": "^5.5.2"
   },
   "repository": {

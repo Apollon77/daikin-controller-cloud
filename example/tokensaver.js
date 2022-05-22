@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 /**
  * Example Script to use the Daikin-Controller-Cloud library
  *

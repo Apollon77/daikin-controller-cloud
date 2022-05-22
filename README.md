@@ -7,12 +7,14 @@
 Library to generate/retrieve tokens to communicate with the Daikin cloud and to control Daikin devices via the cloud adapters like (BRP069C4x).
 
 ## Description
-The newer Daikin devices sold since 2020 contain a newer Wifi Adapter (e.g. BRP069C4x) which only connects to the Daikin Cloud and is no longer reachable locally.
+The newer Daikin devices sold since 2020 contain a newer Wifi Adapter (e.g. BRP069C4x) which only connects to the Daikin Cloud and is no longer reachable locally. These devices are only controllable with the Daikin Onecta App.
 
 This library allows to initially (hopefully once) retrieve tokens by using a proxy to login to the Daikin Cloud. After that these tokens can be used and refreshed to interact with teh devices.
 
 **For more information on the Proxy progress for end users - because you need to trust and whitelist them and such - can be found in [PROXY.md](PROXY.md)!**
 Info: This project is not grabbing any username or password, just the created tokens after you logged in.
+
+Note: For devices with older WLAN-Adapters like **BRP069A4x** which can only be used by the Daikin Controller App please use the [Daikin-Controller](https://github.com/Apollon77/daikin-controller) lib instead.
 
 ## IMPORTANT
 When you integrate this library please make sure users do not refresh data out of the cloud too fast. Please still think about the needed resources and costs on Daikin side to operate the cloud services and only allow meaningful poll intervals!
@@ -31,6 +33,7 @@ From within the main directory, run:
 `node example/tokensaver.js`
 
 Or, more conveniently, use one of the binaries (Linux, macOS and Windows) supplied with the [Releases](https://github.com/Apollon77/daikin-controller-cloud/releases).
+Alternatively you can execute `npx daikin-controller-cloud` which will also execute the tokensaver.js without the need to install the library (Node.js is required to be installed).
 
 Calling tokensaver.js without any parameters will open a proxy where you can login to the Daikin Cloud and the tokens will be fetched.
 
@@ -57,6 +60,12 @@ See example folder, check the settings (add your own IP at minimum!) and start i
 
 
 ## Changelog:
+
+### __WORK IN PROGRESS__
+* BREAKING: Drop Node.js 10.x; support for LTS versions of Node.js
+* (Apollon77) Update dependencies to latest versions and make library compatible again to them
+* (Apollon77) Split the options initialization for Proxy and it's defaults to the proxy class
+
 ### 0.2.1 (2022-02-20)
 * (uKL) Expose isCloudConnectionUp as own method on device
 * (uKL) prevent crash when some data from devices are still null after new addition to cloud
@@ -75,3 +84,6 @@ See example folder, check the settings (add your own IP at minimum!) and start i
 
 ### 0.0.x
 * (Apollon77) Initial version
+
+## Disclaimer
+**Daikin is a trademark of DAIKIN INDUSTRIES, LTD. I am in no way endorsed by or affiliated with DAIKIN INDUSTRIES, LTD., or any associated subsidiaries, logos or trademarks. This personal project is maintained in spare time.**

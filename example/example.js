@@ -72,7 +72,7 @@ async function main() {
     console.log('Use Token with the following claims: ' + JSON.stringify(daikinCloud.getTokenSet().claims()));
 
     const daikinDeviceDetails = await daikinCloud.getCloudDeviceDetails();
-    //console.log(`Cloud Device Details: ${JSON.stringify(daikinDeviceDetails)}`);
+    // console.log(`Cloud Device Details: ${JSON.stringify(daikinDeviceDetails)}`);
 
     const devices = await daikinCloud.getCloudDevices();
 
@@ -82,7 +82,7 @@ async function main() {
             console.log('    last updated: ' + dev.getLastUpdated());
             console.log('    modelInfo: ' + dev.getData('gateway', 'modelInfo').value);
             console.log('    temp auto set room: ' + dev.getData('climateControl', 'temperatureControl', '/operationModes/auto/setpoints/roomTemperature').value);
-            // console.log('    Full mapped description: ' + dev.getData());
+            // console.log('    Full mapped description: ' + JSON.stringify(dev.getData()));
 
             // only partially tested, needs to be checked!!
             // await dev.setData('gateway', 'ledEnabled', true);

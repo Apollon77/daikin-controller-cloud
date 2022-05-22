@@ -14,15 +14,15 @@ class DaikinCloudController extends EventEmitter {
      * Constructor for Daikin Cloud Controller
      * @param {object} tokenSet JSON or instance of openid-client.TokenSet with the already known communication tokens
      * @param {object} options Options objects
-     * @param {object} options.proxyOwnIp Own external IP of the proxy for the final redirect (unused right now)
+     * @param {object} [options.proxyOwnIp] Own external IP of the proxy for the final redirect (unused right now)
      * @param {string} [options.proxyListenBind='0.0.0.0'] Listen-Host setting for servers
-     * @param {object} options.proxyPort=8888 Port for SSL-Proxy
-     * @param {object} options.proxyWebPort=8889 Port for Webpage to download cert and start process
-     * @param {object} options.proxyDataDir Data directory to store certificates and other needed files, defaults to library root directory
+     * @param {object} [options.proxyPort=8888] Port for SSL-Proxy
+     * @param {object} [options.proxyWebPort=8889] Port for Webpage to download cert and start process
+     * @param {object} [options.proxyDataDir] Data directory to store certificates and other needed files, defaults to library root directory
      * @param {function} [options.logger=console.log] Logger function
      * @param {string} [options.logLevel=info] Loglevel to use - in fact only "debug" has a meaning to log some more details
      * @param {number} options.communicationTimeout=10000 Timeout in ms for Requests & Responses to Cloud
-     * @param {number} options.communicationRetries=3 Number of Retries if Authentication Requests timed out 
+     * @param {number} options.communicationRetries=3 Number of Retries if Authentication Requests timed out
      */
     constructor(tokenSet, options) {
         super();
@@ -30,16 +30,12 @@ class DaikinCloudController extends EventEmitter {
             options = tokenSet;
             tokenSet = null;
         }
-        this.options = options || {
-            proxyOwnIp: '',
-            proxyListenBind: '0.0.0.0',
-            proxyPort: 8888,
-            proxyWebPort: 8889,
-            proxyDataDir: path.join(__dirname),
+        options = options || {};
+        this.options = Object.assign({
             logger: null,
-            communicationRetries: 3,
-            communicationTimeout: 10000
-        };
+            logLevel: 'info'
+        }, options);
+
         if (!this.options.logLevel) {
             this.options.logLevel = 'info';
         }
@@ -75,60 +71,36 @@ class DaikinCloudController extends EventEmitter {
 
         // enhance got client with additional logging for debug mode
         custom.setHttpOptionsDefaults({
-            hooks: {
-                beforeRequest: [
-                    (options) => {
-                        if (this.options.logLevel === 'debug') {
-                            console.log('<-- %s %s', options.method.toUpperCase(), options.url.href);
-                            console.log('<-- HEADERS %o', options.headers);
-                            if (options.body) {
-                                console.log('<-- BODY %s', options.body);
-                            }
-                        }
-                    },
-                ],
-                afterResponse: [
-                    (response) => {
-                        if (this.options.logLevel === 'debug') {
-                            console.log('--> %i FROM %s %s', response.statusCode, response.request.options.method.toUpperCase(), response.request.options.url.href);
-                            console.log('--> HEADERS %o', response.headers);
-                            if (response.body) {
-                                console.log('--> BODY %s', response.body);
-                            }
-                        }
-                        return response;
-                    }
-                ]
-            },
-            timeout: {
-                response: this.options.communicationTimeout,
-                request: this.options.communicationTimeout
-            },
-            retry: {
-                retries: this.options.communicationRetries,
-                errorCodes: ['ETIMEDOUT'],
-                methods: ['GET', 'POST']
-            }
+            timeout: this.options.communicationTimeout,
         });
     }
 
     /**
      * Initialize and Start Proxy and Web Server
+     /**
+     * Constructor for Daikin Cloud Controller
+     * @param {object} [options] Options objects, if provided will overwrite these settings for the proxy, else ones from main object are used
+     * @param {string} [options.proxyOwnIp] Own external IP of the proxy for the final redirect (use to override the external IP of the proxy)
+     * @param {string} [options.proxyListenBind='0.0.0.0'] Listen-Host setting for servers
+     * @param {number} [options.proxyPort=8888] Port for SSL-Proxy
+     * @param {object} [options.proxyWebPort=8889] Port for Webpage to download cert and start process
+     * @param {object} [options.proxyDataDir] Data directory to store certificates and other needed files, defaults to library root directory
+     * @param {function} [options.logger=console.log] Logger function
+     * @param {string} [options.logLevel=info] Loglevel to use - in fact only "debug" has a meaning to log some more details
      * @returns {Promise<boolean>} Resolves with true if server was started successfully
      */
-    async initProxyServer() {
+    async initProxyServer(options) {
         Proxy = Proxy || require('./lib/proxy');
 
         if (!this.proxy) {
-            const proxyOptions = {
-                proxyOwnIp: this.options.proxyOwnIp,
-                proxyListenBind: this.options.proxyListenBind,
-                proxyPort: this.options.proxyPort,
-                proxyWebPort: this.options.proxyWebPort,
-                proxyDataDir: this.options.proxyDataDir,
-                logLevel: this.options.logLevel,
-                logger: this.options.logger
-            };
+            options = options || {};
+            const proxyOptions = Object.assign({
+                proxyOwnIp: '',
+                proxyListenBind: '0.0.0.0',
+                proxyPort: 8888,
+                proxyWebPort: 8889,
+                proxyDataDir: path.join(__dirname),
+            }, this.options, options);
 
             this.proxy = new Proxy(this.openIdClient, proxyOptions);
         }
@@ -257,7 +229,8 @@ class DaikinCloudController extends EventEmitter {
         if (!resourceUrl.startsWith('http')) {
             resourceUrl = 'https://api.prod.unicloud.edc.dknadmin.be' + resourceUrl;
         }
-        options = options|| {};
+        options = options || {};
+        options.timeout = this.options.communicationTimeout;
         options.headers = options.headers || {};
         options.headers['user-agent'] = 'Daikin/1.6.1.4681 CFNetwork/1209 Darwin/20.2.0';
         options.headers['x-api-key'] = 'xw6gvOtBHq5b1pyceadRp6rujSNSZdjx2AqT03iC';

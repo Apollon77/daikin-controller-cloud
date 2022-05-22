@@ -10,15 +10,15 @@
     "daikin"
   ],
   "dependencies": {
-    "finalhandler": "^1.1.2",
+    "finalhandler": "^1.2.0",
     "got": "^11.8.3",
     "http-mitm-proxy": "^0.9.0",
-    "openid-client": "^4.9.1",
-    "serve-static": "^1.14.2"
+    "openid-client": "^5.1.6",
+    "serve-static": "^1.15.0"
   },
   "devDependencies": {
-    "@alcalzone/release-script": "^3.5.8",
-    "pkg": "^5.6.0"
+    "@alcalzone/release-script": "^3.5.9",
+    "pkg": "^5.7.0"
   },
   "repository": {
     "type": "git",
@@ -32,6 +32,7 @@
     "build-tokensaver": "pkg example/tokensaver.js"
   },
   "main": "index.js",
+  "bin": "example/tokensaver.js",
   "directories": {
     "example": "example",
     "lib": "lib"

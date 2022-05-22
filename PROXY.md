@@ -16,7 +16,7 @@ Prerequisites: the necessary options in `example.js` are configured according to
 
 * Start the `example.js` file. It opens two ports. 
 1. One port for the proxy-server. This is the port you will configure on the client device's proxy settings (default: 8888).
-1. The second provides an simple webpage to guide you through the process (default: 8889).
+1. The second port provides a simple webpage to guide you through the process (default: 8889).
 * Open the  webpage (http://ip_addr:8889 by default)
 <img width="300" alt="initial_webpage" src="https://user-images.githubusercontent.com/65073191/124582164-0fe0b000-de52-11eb-8dad-8dec4db7b0e5.png">
 

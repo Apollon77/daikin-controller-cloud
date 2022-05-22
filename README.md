@@ -60,8 +60,7 @@ See example folder, check the settings (add your own IP at minimum!) and start i
 
 
 ## Changelog:
-
-### __WORK IN PROGRESS__
+### 1.0.0 (2022-05-22)
 * BREAKING: Drop Node.js 10.x; support for LTS versions of Node.js
 * (Apollon77) Update dependencies to latest versions and make library compatible again to them
 * (Apollon77) Split the options initialization for Proxy and it's defaults to the proxy class

@@ -11,10 +11,23 @@ The newer Daikin devices sold since 2020 contain a newer Wifi Adapter (e.g. BRP0
 
 This library allows to initially (hopefully once) retrieve tokens by using a proxy to login to the Daikin Cloud. After that these tokens can be used and refreshed to interact with teh devices.
 
+Note: For devices with older WLAN-Adapters like **BRP069A4x** which can only be used by the Daikin Controller App please use the [Daikin-Controller](https://github.com/Apollon77/daikin-controller) lib instead.
+
+### Login with E-Mail/Password
+The easy mode is to use the `login`method of the `DaikinControllerCloud` class and provide the E-Mail and the Password.
+
+An automatic login is tried in this case and the tokens are retrieved.
+
+It can happen that this process do not work because the Daikin Website requires you to solve a captcha. In this can you can use the following trick:
+* Start the proxy
+* Call the proxy URL on port 8889
+* You **do not** need to import the certificate!
+* Just click on the `Login into the Daikin Cloud to retrieve the tokens` link at the end of the instructions page and login there once and solve the captcha.
+* Close the browser window and try the automatic login again
+
+### Login with Proxy
 **For more information on the Proxy progress for end users - because you need to trust and whitelist them and such - can be found in [PROXY.md](PROXY.md)!**
 Info: This project is not grabbing any username or password, just the created tokens after you logged in.
-
-Note: For devices with older WLAN-Adapters like **BRP069A4x** which can only be used by the Daikin Controller App please use the [Daikin-Controller](https://github.com/Apollon77/daikin-controller) lib instead.
 
 ## IMPORTANT
 When you integrate this library please make sure users do not refresh data out of the cloud too fast. Please still think about the needed resources and costs on Daikin side to operate the cloud services and only allow meaningful poll intervals!
@@ -60,6 +73,10 @@ See example folder, check the settings (add your own IP at minimum!) and start i
 
 
 ## Changelog:
+
+### __WORK IN PROGRESS__
+* (Apollon77) Optimize login handling
+
 ### 1.0.0 (2022-05-22)
 * BREAKING: Drop Node.js 10.x; support for LTS versions of Node.js
 * (Apollon77) Update dependencies to latest versions and make library compatible again to them

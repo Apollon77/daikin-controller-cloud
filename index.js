@@ -301,20 +301,11 @@ class DaikinCloudController extends EventEmitter {
      async login(userName, password) {
         Proxy = Proxy || require('./lib/proxy');
 
-        // Initiate proxy without starting it
-        if (!this.proxy) {
-            const proxyOptions = {
-                proxyOwnIp: this.options.proxyOwnIp,
-                proxyListenBind: this.options.proxyListenBind,
-                proxyPort: this.options.proxyPort,
-                proxyWebPort: this.options.proxyWebPort,
-                proxyDataDir: this.options.proxyDataDir,
-                logLevel: this.options.logLevel,
-                logger: this.options.logger
-            };
-
-            this.proxy = new Proxy(this.openIdClient, proxyOptions);
-        }
+        // Initiate dummyproxy without starting it
+        const dummyProxy = new Proxy(this.openIdClient, {
+            logLevel: this.options.logLevel,
+            logger: this.options.logger
+        });
 
         let cookies;
         let location;
@@ -323,7 +314,7 @@ class DaikinCloudController extends EventEmitter {
         // Extract csrf state cookies
         let csrfStateCookie;
         try {
-            const response = await got(this.proxy._generateInitialUrl(), {
+            const response = await got(dummyProxy._generateInitialUrl(), {
                 followRedirect: false,
                 timeout: {
                     response: this.options.communicationTimeout,
@@ -544,7 +535,7 @@ class DaikinCloudController extends EventEmitter {
             throw err;
         }
 
-        this.tokenSet = await this.proxy._retrieveTokens(daikinunified);
+        this.tokenSet = await dummyProxy._retrieveTokens(daikinunified);
 
         /**
          * Inform the using application about changed Tokens (in this case it are new received tokens)

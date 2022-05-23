@@ -73,8 +73,7 @@ See example folder, check the settings (add your own IP at minimum!) and start i
 
 
 ## Changelog:
-
-### __WORK IN PROGRESS__
+### 1.0.1 (2022-05-23)
 * (Apollon77) Optimize login handling
 
 ### 1.0.0 (2022-05-22)

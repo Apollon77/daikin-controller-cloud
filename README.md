@@ -60,6 +60,8 @@ Alternatively execute
 ## Code-Usage example
 See example folder, check the settings (add your own IP at minimum!) and start it with `node example.js`.
 
+When getting or setting data you need to look at the complete data structure returned by the device. SO best go a "getData()" and check the structure. The getData/setData parameters mirror the structure. In fact you awlways eed to provide the first two levels, maybe a "path style third level".
+
 ## Issue reporting and enhancements
 * Create Issues here in Github
 * Provide PRs for actual changes and enhancements to code or documentation!
@@ -73,6 +75,10 @@ See example folder, check the settings (add your own IP at minimum!) and start i
 
 
 ## Changelog:
+
+### __WORK IN PROGRESS__
+* (Apollon77) Fix potential crash case
+
 ### 1.0.1 (2022-05-23)
 * (Apollon77) Optimize login handling
 

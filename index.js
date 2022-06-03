@@ -132,7 +132,10 @@ class DaikinCloudController extends EventEmitter {
      *
      * @returns {Promise<boolean>} resolve with true on success
      */
-    stopProxyServer() {
+    async stopProxyServer() {
+        if (!this.proxy) {
+            return true;
+        }
         return this.proxy.stopServer();
     }
 

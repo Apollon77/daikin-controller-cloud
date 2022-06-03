@@ -75,6 +75,9 @@ When getting or setting data you need to look at the complete data structure ret
 
 
 ## Changelog:
+### __WORK IN PROGRESS__
+* (Apollon77) Fix potential crash case
+
 ### 1.0.2 (2022-05-27)
 * (Apollon77) Fix potential crash case
 

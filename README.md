@@ -6,6 +6,10 @@
 
 Library to generate/retrieve tokens to communicate with the Daikin cloud and to control Daikin devices via the cloud adapters like (BRP069C4x).
 
+## Disclaimer
+**All product and company names or logos are trademarks™ or registered® trademarks of their respective holders. Use of them does not imply any affiliation with or endorsement by them or any associated subsidiaries! This personal project is maintained in spare time and has no business goal.**
+**Daikin is a trademark of DAIKIN INDUSTRIES, LTD.**
+
 ## Description
 The newer Daikin devices sold since 2020 contain a newer Wifi Adapter (e.g. BRP069C4x) which only connects to the Daikin Cloud and is no longer reachable locally. These devices are only controllable with the Daikin Onecta App.
 
@@ -107,6 +111,3 @@ When getting or setting data you need to look at the complete data structure ret
 
 ### 0.0.x
 * (Apollon77) Initial version
-
-## Disclaimer
-**Daikin is a trademark of DAIKIN INDUSTRIES, LTD. I am in no way endorsed by or affiliated with DAIKIN INDUSTRIES, LTD., or any associated subsidiaries, logos or trademarks. This personal project is maintained in spare time.**

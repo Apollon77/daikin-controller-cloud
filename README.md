@@ -79,6 +79,10 @@ When getting or setting data you need to look at the complete data structure ret
 
 
 ## Changelog:
+
+### __WORK IN PROGRESS__
+* (Apollon77) Fix potential crash case with Proxy stop
+
 ### 1.0.3 (2022-06-03)
 * (Apollon77) Fix potential crash case
 

@@ -1,6 +1,6 @@
 const EventEmitter = require('events');
 const { Issuer, TokenSet, custom } = require('openid-client');
-const got = require('got');
+const got = require("@esm2cjs/got").default;
 const path = require('path');
 const DaikinCloudDevice = require('./lib/device');
 

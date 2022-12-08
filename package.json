@@ -13,7 +13,7 @@
     "finalhandler": "^1.2.0",
     "@esm2cjs/got": "^12.5.3",
     "http-mitm-proxy": "^0.9.0",
-    "openid-client": "^5.1.10",
+    "openid-client": "^5.3.1",
     "serve-static": "^1.15.0"
   },
   "devDependencies": {

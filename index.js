@@ -242,7 +242,7 @@ class DaikinCloudController extends EventEmitter {
             try {
                 return JSON.parse(res.body.toString());
             } catch {
-                return res.body.toString();
+                return (res.body && res.body.toString()) || true;
             }
         }
         if (res.statusCode === 204) {
@@ -250,7 +250,7 @@ class DaikinCloudController extends EventEmitter {
         }
         if (!refreshed && res.statusCode === 401) { // Refresh needed
             await this.refreshAccessToken();
-            return this.doBearerRequest(resourceUrl, options,true);
+            return this.doBearerRequest(resourceUrl, options, true);
         }
         const err = new Error('Communication failed ' + res.statusCode);
         err.response = res;

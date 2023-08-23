@@ -195,7 +195,7 @@ class DaikinCloudController extends EventEmitter {
                 request: this.options.communicationTimeout
             },
             retry: {
-                retries: this.options.communicationRetries,
+                limit: this.options.communicationRetries,
                 errorCodes: ['ETIMEDOUT'],
                 methods: ['GET', 'POST']
             }
@@ -324,7 +324,7 @@ class DaikinCloudController extends EventEmitter {
                     request: this.options.communicationTimeout
                 },
                 retry: {
-                    retries: this.options.communicationRetries,
+                    limit: this.options.communicationRetries,
                     errorCodes: ['ETIMEDOUT'],
                     methods: ['GET', 'POST']
                 }
@@ -350,7 +350,7 @@ class DaikinCloudController extends EventEmitter {
                     request: this.options.communicationTimeout
                 },
                 retry: {
-                    retries: this.options.communicationRetries,
+                    limit: this.options.communicationRetries,
                     errorCodes: ['ETIMEDOUT'],
                     methods: ['GET', 'POST']
                 }
@@ -376,7 +376,7 @@ class DaikinCloudController extends EventEmitter {
                     request: this.options.communicationTimeout
                 },
                 retry: {
-                    retries: this.options.communicationRetries,
+                    limit: this.options.communicationRetries,
                     errorCodes: ['ETIMEDOUT'],
                     methods: ['GET', 'POST']
                 }
@@ -403,7 +403,7 @@ class DaikinCloudController extends EventEmitter {
                     request: this.options.communicationTimeout
                 },
                 retry: {
-                    retries: this.options.communicationRetries,
+                    limit: this.options.communicationRetries,
                     errorCodes: ['ETIMEDOUT'],
                     methods: ['GET', 'POST']
                 }
@@ -450,7 +450,7 @@ class DaikinCloudController extends EventEmitter {
                     request: this.options.communicationTimeout
                 },
                 retry: {
-                    retries: this.options.communicationRetries,
+                    limit: this.options.communicationRetries,
                     errorCodes: ['ETIMEDOUT'],
                     methods: ['GET', 'POST']
                 }
@@ -487,7 +487,7 @@ class DaikinCloudController extends EventEmitter {
                     request: this.options.communicationTimeout
                 },
                 retry: {
-                    retries: this.options.communicationRetries,
+                    limit: this.options.communicationRetries,
                     errorCodes: ['ETIMEDOUT'],
                     methods: ['GET', 'POST']
                 }
@@ -523,7 +523,7 @@ class DaikinCloudController extends EventEmitter {
                     request: this.options.communicationTimeout
                 },
                 retry: {
-                    retries: this.options.communicationRetries,
+                    limit: this.options.communicationRetries,
                     errorCodes: ['ETIMEDOUT'],
                     methods: ['GET', 'POST']
                 }

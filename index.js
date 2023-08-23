@@ -242,7 +242,7 @@ class DaikinCloudController extends EventEmitter {
             try {
                 return JSON.parse(res.body.toString());
             } catch {
-                return res.body.toString();
+                return res.body ? res.body.toString() : "";
             }
         }
         if (res.statusCode === 204) {

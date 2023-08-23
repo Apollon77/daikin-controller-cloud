@@ -79,6 +79,11 @@ When getting or setting data you need to look at the complete data structure ret
 
 
 ## Changelog:
+
+### __WORK IN PROGRESS__
+* (Apollon77) Fix crash cases
+* (Apollon77) Path certificate creation to be only 1 year
+
 ### 1.0.4 (2022-08-13)
 * (Apollon77) Fix potential crash case with Proxy stop
 

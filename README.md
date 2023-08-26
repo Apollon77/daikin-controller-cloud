@@ -79,6 +79,10 @@ When getting or setting data you need to look at the complete data structure ret
 
 
 ## Changelog:
+
+### __WORK IN PROGRESS__
+* (Apollon77) Add parsing support for Altherma electrical device data, missing "unit" is added to the data
+
 ### 1.1.0 (2023-08-23)
 * (Apollon77) Fix crash cases
 * (Apollon77) Path certificate creation to be only 1 year

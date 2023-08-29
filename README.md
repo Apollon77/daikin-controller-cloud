@@ -79,8 +79,7 @@ When getting or setting data you need to look at the complete data structure ret
 
 
 ## Changelog:
-
-### __WORK IN PROGRESS__
+### 1.2.1 (2023-08-29)
 * (Apollon77) Use field timestamp to report the last update time of the data
 
 ### 1.2.0 (2023-08-29)

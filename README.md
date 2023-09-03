@@ -80,7 +80,7 @@ When getting or setting data you need to look at the complete data structure ret
 
 ## Changelog:
 
-## __WORK IN PROGRESS__
+### __WORK IN PROGRESS__
 * (Apollon77) make sure isCloudConnectionUp is always a boolean
 
 ### 1.2.1 (2023-08-29)

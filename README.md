@@ -79,6 +79,10 @@ When getting or setting data you need to look at the complete data structure ret
 
 
 ## Changelog:
+
+### __WORK IN PROGRESS__
+* (ptz0n) Making sure to really store Refresh tokens on update
+
 ### 1.2.2 (2023-09-03)
 * (Apollon77) make sure isCloudConnectionUp is always a boolean
 

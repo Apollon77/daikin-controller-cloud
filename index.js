@@ -204,7 +204,7 @@ class DaikinCloudController extends EventEmitter {
         if (response.body && response.body.AuthenticationResult && response.body.AuthenticationResult.AccessToken && response.body.AuthenticationResult.TokenType === 'Bearer') {
             this.tokenSet.access_token = response.body.AuthenticationResult.AccessToken;
             this.tokenSet.id_token = response.body.AuthenticationResult.IdToken;
-            this.tokenSet.access_token = response.body.AuthenticationResult.AccessToken;
+            this.tokenSet.refresh_token = response.body.AuthenticationResult.RefreshToken;
             this.tokenSet.expires_at = ~~(Date.now() / 1000) + response.body.AuthenticationResult.ExpiresIn * 1000;
             this.emit('token_update', this.tokenSet);
             return this.tokenSet;

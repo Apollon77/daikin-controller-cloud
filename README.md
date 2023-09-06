@@ -79,8 +79,7 @@ When getting or setting data you need to look at the complete data structure ret
 
 
 ## Changelog:
-
-### __WORK IN PROGRESS__
+### 1.2.3 (2023-09-06)
 * (ptz0n) Making sure to really store Refresh tokens on update
 
 ### 1.2.2 (2023-09-03)

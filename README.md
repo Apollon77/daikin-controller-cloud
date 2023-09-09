@@ -79,8 +79,7 @@ When getting or setting data you need to look at the complete data structure ret
 
 
 ## Changelog:
-
-### __WORK IN PROGRESS__
+### 1.2.4 (2023-09-09)
 * (Apollon77) Make sure to store only existing refresh tokens
 
 ### 1.2.3 (2023-09-06)

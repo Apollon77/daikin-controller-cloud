@@ -1,5 +1,5 @@
 const stylish = {
-	"_id": "78001793-f434-45bf-8db1-8f606aa6f844",
+	"_id": "REDACTED_ID_STYLISH_1",
 	"id": "78001793-f434-45bf-8db1-8f606aa6f844",
 	"type": "dx23",
 	"deviceModel": "dx23",
@@ -31,11 +31,11 @@ const stylish = {
 			},
 			"ipAddress": {
 				"settable": false,
-				"value": "192.168.1.11"
+				"value": "REDACTED_IP_ADDRESS"
 			},
 			"macAddress": {
 				"settable": false,
-				"value": "48:e7:da:02:1f:78"
+				"value": "REDACTED_MAC_ADDRESS"
 			},
 			"regionCode": {
 				"settable": false,
@@ -59,11 +59,11 @@ const stylish = {
 			},
 			"ssid": {
 				"settable": false,
-				"value": "DaikinAP88985"
+				"value": "REDACTED_SSID"
 			},
 			"wifiConnectionSSID": {
 				"settable": false,
-				"value": "Proximus-Home-B7B0"
+				"value": "REDACTED_WIFI_SSID"
 			},
 			"wifiConnectionStrength": {
 				"settable": false,
@@ -874,7 +874,7 @@ const stylish = {
 	"lastUpdateReceived": "2023-03-07T18:57:22.238Z"
 };
 const perfera = {
-	"_id": "fa8397fe-b23f-465b-b8b9-90bf15f565fa",
+	"_id": "REDACTED_ID_PERFERA_1",
 	"type": "dx4",
 	"deviceModel": "dx4",
 	"isCloudConnectionUp": {
@@ -912,7 +912,7 @@ const perfera = {
 			},
 			"macAddress": {
 				"settable": false,
-				"value": "04:c4:61:c0:e0:8c"
+				"value": "REDACTED_MAC_ADDRESS"
 			},
 			"modelInfo": {
 				"settable": false,
@@ -924,11 +924,11 @@ const perfera = {
 			},
 			"serialNumber": {
 				"settable": false,
-				"value": "0000000004779266"
+				"value": "REDACTED_SERIAL_NUMBER"
 			},
 			"ssid": {
 				"settable": false,
-				"value": "DaikinAP55656"
+				"value": "REDACTED_SSID"
 			},
 			"timeZone": {
 				"settable": true,
@@ -936,7 +936,7 @@ const perfera = {
 			},
 			"wifiConnectionSSID": {
 				"settable": false,
-				"value": "TP-Link_7C88"
+				"value": "REDACTED_WIFI"
 			},
 			"wifiConnectionStrength": {
 				"settable": false,
@@ -1783,8 +1783,9 @@ const perfera = {
 	"id": "fa8397fe-b23f-465b-b8b9-90bf15f565fa",
 	"lastUpdateReceived": "2023-03-07T19:14:40.746Z"
 };
+
 const altherma = {
-	"_id": "10b029e7-484c-4519-b22e-c14be4b7a71c",
+	"_id": "REDACTED_ID_ALTHERMA_1",
 	"deviceModel": "Altherma",
 	"type": "heating-wlan",
 	"isCloudConnectionUp": {
@@ -1803,7 +1804,7 @@ const altherma = {
 			},
 			"ipAddress": {
 				"settable": false,
-				"value": "192.168.1.10",
+				"value": "REDACTED_IP_ADDRESS",
 				"maxLength": 15
 			},
 			"iconId": {
@@ -1818,7 +1819,7 @@ const altherma = {
 			},
 			"macAddress": {
 				"settable": false,
-				"value": "48:e7:da:01:c6:08",
+				"value": "REDACTED_MAC_ADDRESS",
 				"maxLength": 17
 			},
 			"modelInfo": {
@@ -1835,18 +1836,18 @@ const altherma = {
 			"ssid": {
 				"settable": false,
 				"requiresReboot": false,
-				"value": "daikin-ap",
+				"value": "REDACTED_SSID",
 				"maxLength": 9
 			},
 			"serialNumber": {
 				"settable": false,
-				"value": "0060691",
+				"value": "REDACTED_SERIAL_NUMBER",
 				"maxLength": 16
 			},
 			"wifiConnectionSSID": {
 				"settable": false,
 				"requiresReboot": false,
-				"value": "Proximus-Home-B7B0",
+				"value": "REDACTED_WIFI",
 				"maxLength": 32
 			},
 			"wifiConnectionStrength": {

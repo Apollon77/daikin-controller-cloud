@@ -1,6 +1,3 @@
-const DaikinCloudController = require('./index.js');
-const DaikinCloudDevice = require('./lib/device.js');
-
 const stylish = {
 	"_id": "78001793-f434-45bf-8db1-8f606aa6f844",
 	"id": "78001793-f434-45bf-8db1-8f606aa6f844",
@@ -2544,17 +2541,6 @@ const altherma = {
 	"lastUpdateReceived": "2023-03-07T19:01:39.983Z"
 };
 
-test.each([
-	['Stylish', stylish, 'climateControl'],
-	['Perfera', perfera, 'climateControl'],
-	['Altherma', altherma, 'climateControlMainZone'],
-])('Get name from device %s', async (name, json, climateControlEmbeddedId) => {
-	const controller = new DaikinCloudController();
-	const spy = jest.spyOn(controller, 'getCloudDeviceDetails').mockImplementation(() => {
-		return Promise.resolve([json])
-	});
-	const devices = await controller.getCloudDevices();
-
-	expect(devices[0]).toBeInstanceOf(DaikinCloudDevice);
-	expect(devices[0].getData(climateControlEmbeddedId, 'name').value).toEqual(name);
-});
+module.exports = {
+	stylish, perfera, altherma
+}

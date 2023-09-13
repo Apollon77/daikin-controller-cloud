@@ -109,3 +109,8 @@ dist
 .tern-port
 .vscode/launch.json
 .vs/
+/.idea/.gitignore
+/.idea/daikin-controller-cloud.iml
+/.idea/misc.xml
+/.idea/modules.xml
+/.idea/vcs.xml

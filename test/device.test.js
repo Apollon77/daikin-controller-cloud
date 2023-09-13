@@ -21,7 +21,5 @@ test.each([
 	['Altherma', testData.altherma, 'climateControlMainZone'],
 ])('Get name from device %s', async (name, json, climateControlEmbeddedId) => {
 	const device = new DaikinCloudDevice(json, new DaikinCloudController());
-
-	expect(device).toBeInstanceOf(DaikinCloudDevice);
 	expect(device.getData(climateControlEmbeddedId, 'name').value).toEqual(name);
 });

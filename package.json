@@ -1,6 +1,6 @@
 {
   "name": "daikin-controller-cloud",
-  "version": "1.2.4",
+  "version": "2.0.0",
   "description": "Interact with Daikin Cloud devices and retrieve Tokens",
   "author": "Apollon77 <iobroker@fischer-ka.de>",
   "contributors": [],
@@ -9,16 +9,9 @@
   "keywords": [
     "daikin"
   ],
-  "dependencies": {
-    "finalhandler": "^1.2.0",
-    "@esm2cjs/got": "^12.5.3",
-    "http-mitm-proxy": "^1.0.0",
-    "openid-client": "^5.6.5",
-    "serve-static": "^1.15.0"
-  },
+  "dependencies": {},
   "devDependencies": {
-    "@alcalzone/release-script": "^3.7.0",
-    "pkg": "^5.8.1"
+    "@alcalzone/release-script": "^3.7.0"
   },
   "repository": {
     "type": "git",
@@ -28,11 +21,9 @@
     "url": "https://github.com/Apollon77/daikin-controller-cloud/issues"
   },
   "scripts": {
-    "release": "release-script",
-    "build-tokensaver": "pkg example/tokensaver.js"
+    "release": "release-script"
   },
   "main": "index.js",
-  "bin": "example/tokensaver.js",
   "directories": {
     "example": "example",
     "lib": "lib"

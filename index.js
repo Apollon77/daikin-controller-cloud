@@ -1,16 +1,7 @@
-const DaikinCloudDevice = require('./lib/device');
 const EventEmitter = require('events');
+const { Issuer, TokenSet, custom } = require('openid-client');
 
-/**
- * TokenSet is an object containing OIDC tokens for the Daikin Cloud API.
- *
- * @typedef {Object} TokenSet
- * @property {string} access_token - The access token for the Daikin Cloud API.
- * @property {string} token_type - The type of the token, usually "Bearer".
- * @property {number} expires_in - The number of seconds until the access token expires.
- * @property {string} id_token - The ID token for the Daikin Cloud API.
- * @property {string} refresh_token - The refresh token for the Daikin Cloud API.
- */
+const DaikinCloudDevice = require('./lib/device');
 
 /**
  * Daikin Controller for Cloud solution to get tokens and interact with devices
@@ -27,6 +18,26 @@ class DaikinCloudController extends EventEmitter {
         this.clientId = clientId;
         this.clientSecret = clientSecret;
         this.tokenSet = tokenSet;
+
+        // initialize OpenID Issuer with Daikin relevant details
+        this.openIdIssuer = new Issuer({
+            issuer: 'https://cdc.daikin.eu/oidc/op/v1.0/3_xRB3jaQ62bVjqXU1omaEsPDVYC0Twi1zfq1zHPu_5HFT0zWkDvZJS97Yw1loJnTm/',
+            authorization_endpoint: 'https://idp.onecta.daikineurope.com/v1/oidc/authorize',
+            token_endpoint: 'https://idp.onecta.daikineurope.com/v1/oidc/token',
+        });
+
+        // initialize OpenID Client with Daikin relevant details
+        this.openIdClient = new this.openIdIssuer.Client({
+            client_id: this.clientId,
+            client_secret: this.clientSecret,
+            redirect_uris: ['http://somedomain.com/callback'],
+            response_types: ['code'],
+        });
+
+        // enhance got client with additional logging for debug mode
+        custom.setHttpOptionsDefaults({
+            timeout: 10000,
+        });
     }
 
     /**
@@ -74,6 +85,7 @@ class DaikinCloudController extends EventEmitter {
      * @returns {Promise<object>} Data returned by daikin cloud
      */
     async doBearerRequest(resourceUrl, extraOptions, refreshed) {
+        await this.refreshAccessToken()
         if (!this.tokenSet) {
             throw new Error('Please provide a TokenSet to authenticate');
         }

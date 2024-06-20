@@ -9,9 +9,12 @@
   "keywords": [
     "daikin"
   ],
-  "dependencies": {},
+  "dependencies": {
+    "openid-client": "^5.6.5"
+  },
   "devDependencies": {
     "@alcalzone/release-script": "^3.7.0"
+
   },
   "repository": {
     "type": "git",

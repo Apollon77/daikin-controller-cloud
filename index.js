@@ -85,7 +85,6 @@ class DaikinCloudController extends EventEmitter {
      * @returns {Promise<object>} Data returned by daikin cloud
      */
     async doBearerRequest(resourceUrl, extraOptions, refreshed) {
-        await this.refreshAccessToken()
         if (!this.tokenSet) {
             throw new Error('Please provide a TokenSet to authenticate');
         }
@@ -102,7 +101,9 @@ class DaikinCloudController extends EventEmitter {
             ...extraOptions
         }
 
-        const fetchResponse = await fetch(resourceUrl, options)
+        const fetchResponse = await fetch(resourceUrl, options);
+
+        this.printRateLimitStatus(fetchResponse.headers);
 
         if (fetchResponse.status === 204) {
             return true;
@@ -118,6 +119,11 @@ class DaikinCloudController extends EventEmitter {
         const err = new Error(`Call to ONECTA Cloud API failed with status [${fetchResponse.status}], response: ${JSON.stringify(await fetchResponse.json(), null, 4)}`);
         err.response = await fetchResponse.json();
         throw err;
+    }
+
+    printRateLimitStatus(headers) {
+        console.debug(`Rate Limit: calls left today: ${headers.get('X-RateLimit-Remaining-day')}/${headers.get('X-RateLimit-Limit-day')}`);
+        console.debug(`Rate Limit: calls left this minute: ${headers.get('X-RateLimit-Remaining-minute')}/${headers.get('X-RateLimit-Limit-minute')}, resets in ${headers.get('RateLimit-Reset')} seconds`);
     }
 
     /**

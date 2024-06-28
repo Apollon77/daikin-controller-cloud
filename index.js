@@ -141,6 +141,33 @@ class DaikinCloudController extends EventEmitter {
         return res;
     }
 
+    /**
+     * Trade Authenticated Tokens for a new Access Token
+     *
+     * @returns {Promise<TokenSet>}
+     */
+    static async getAccessTokenFromAuthToken(authToken) {
+        try {
+            const queryParameters = new URLSearchParams();
+            queryParameters.set('grant_type', 'authorization_code');
+            queryParameters.set('client_id', this.clientId);
+            queryParameters.set('client_secret', this.clientSecret);
+            queryParameters.set('code', authToken);
+            const response = await fetch(`https://idp.onecta.daikineurope.com/v1/oidc/token?${queryParameters.toString()}`, {
+                method: 'POST',
+            });
+
+            if (response.status !== 200) {
+                throw new Error(`Token call failed with status ${response.status}, reason: ${JSON.stringify(await response.json(), null, 4)}`);
+            }
+
+            this.tokenSet = await response.json();
+            return this.tokenSet;
+        } catch (e) {
+            throw new Error('Trade Auth Token for Access Token failed: ' + e.message);
+        }
+    }
+
 
 }
 

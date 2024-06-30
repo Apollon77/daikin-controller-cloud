@@ -29,7 +29,7 @@
     "release": "release-script",
     "build-tokensaver": "pkg example/tokensaver.js"
   },
-  "main": "index.js",
+  "main": "dist/index.js",
   "bin": "example/tokensaver.js",
   "directories": {
     "example": "example",

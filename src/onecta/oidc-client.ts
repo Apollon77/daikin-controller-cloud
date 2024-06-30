@@ -22,6 +22,7 @@ export class OnectaClient {
   private _client: BaseClient;
   private _token_set: TokenSet | null;
   private _emitter: EventEmitter;
+  private _get_token_set_queue: { resolve: (set: TokenSet) => any, reject: (err: Error) => any }[];
 
   constructor(config: OnectaClientConfig, emitter: EventEmitter) {
     this._config = config;
@@ -31,6 +32,7 @@ export class OnectaClient {
       client_secret: config.oidc_client_secret,
     });
     this._token_set = null;
+    this._get_token_set_queue = [];
   }
 
   private async _authorize(): Promise<TokenSet> {
@@ -123,8 +125,25 @@ export class OnectaClient {
     return token_set;
   }
 
+  private async _getTokenSetQueued(): Promise<TokenSet> {
+    return new Promise((resolve, reject) => {
+      this._get_token_set_queue.push({ resolve, reject });
+      if (this._get_token_set_queue.length === 1) {
+        this._getTokenSet()
+          .then((token_set) => {
+            this._get_token_set_queue.forEach(({ resolve }) => resolve(token_set));
+            this._get_token_set_queue = [];
+          })
+          .catch((err) => {
+            this._get_token_set_queue.forEach(({ reject }) => reject(err));
+            this._get_token_set_queue = [];
+          });
+      }
+    });
+  }
+
   async requestResource(path: string, opts?: Parameters<typeof BaseClient.prototype.requestResource>[2]): Promise<any> {
-    const token_set = await this._getTokenSet();
+    const token_set = await this._getTokenSetQueued();
     const url = `${OnectaAPIBaseUrl.prod}${path}`;
     const res = await this._client.requestResource(url, token_set, opts);
     if (res.body) {

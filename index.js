@@ -146,12 +146,12 @@ class DaikinCloudController extends EventEmitter {
      *
      * @returns {Promise<TokenSet>}
      */
-    static async getAccessTokenFromAuthToken(authToken) {
+    static async getAccessTokenFromAuthToken(clientId, clientSecret, authToken) {
         try {
             const queryParameters = new URLSearchParams();
             queryParameters.set('grant_type', 'authorization_code');
-            queryParameters.set('client_id', this.clientId);
-            queryParameters.set('client_secret', this.clientSecret);
+            queryParameters.set('client_id', clientId);
+            queryParameters.set('client_secret', clientSecret);
             queryParameters.set('code', authToken);
             const response = await fetch(`https://idp.onecta.daikineurope.com/v1/oidc/token?${queryParameters.toString()}`, {
                 method: 'POST',

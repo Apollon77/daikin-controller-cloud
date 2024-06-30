@@ -5,6 +5,11 @@ import { DaikinCloudDevice } from './device.js';
 import { OnectaClient } from './onecta/oidc-client.js';
 import { OnectaClientConfig } from './onecta/oidc-utils.js';
 
+export declare interface DaikinCloudController {
+    on(event: 'error', listener: (err: Error) => any): this;
+    on(event: 'authorization_request', listener: (url: string) => any): this;
+}
+
 /**
  * Daikin Controller for Cloud solution to get tokens and interact with devices
  */
@@ -14,10 +19,7 @@ export class DaikinCloudController extends EventEmitter {
 
     constructor(config: OnectaClientConfig) {
         super();
-        this.client = new OnectaClient(config);
-        this.client.on('authorization_request', (url) => {
-            this.emit('authorization_request', url);
-        });
+        this.client = new OnectaClient(config, this);
     }
 
     /**

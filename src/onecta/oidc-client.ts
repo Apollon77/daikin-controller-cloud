@@ -2,7 +2,7 @@
 import { readFile, writeFile } from 'node:fs/promises';
 import { EventEmitter } from 'node:events';
 import { randomBytes } from 'node:crypto';
-import { BaseClient, TokenSet, Client } from 'openid-client';
+import { BaseClient, TokenSet } from 'openid-client';
 
 import { 
   OnectaOIDCScope, 
@@ -16,19 +16,16 @@ import {
   startOnectaOIDCCallbackServer,
 } from './oidc-callback-server.js'; 
 
-export declare interface OnectaClient {
-  on(event: 'authorization_request', listener: (url: string) => void): this;
-}
-
-export class OnectaClient extends EventEmitter {
+export class OnectaClient {
 
   private _config: OnectaClientConfig;
   private _client: BaseClient;
   private _token_set: TokenSet | null;
+  private _emitter: EventEmitter;
 
-  constructor(config: OnectaClientConfig) {
-    super();
+  constructor(config: OnectaClientConfig, emitter: EventEmitter) {
     this._config = config;
+    this._emitter = emitter;
     this._client = new onecta_oidc_issuer.Client({
       client_id: config.oidc_client_id,
       client_secret: config.oidc_client_secret,
@@ -45,7 +42,7 @@ export class OnectaClient extends EventEmitter {
       state,
       redirect_uri,
     });
-    this.emit('authorization_request', auth_url);
+    this._emitter.emit('authorization_request', auth_url);
     let auth_code: string | null = null;
     await startOnectaOIDCCallbackServer(this._config, function (srv, req, res) {
       const url = new URL(req.url ?? '/', _config.oidc_callback_server_baseurl);
@@ -93,7 +90,7 @@ export class OnectaClient extends EventEmitter {
       return token_set;
     } catch (err) {
       if ((err as { code?: string }).code !== 'ENOENT') {
-        this.emit('error', 'Could not load OIDC tokenset from disk: ' + (err as Error).message);
+        this._emitter.emit('error', 'Could not load OIDC tokenset from disk: ' + (err as Error).message);
       }
       return null;
     }
@@ -104,7 +101,7 @@ export class OnectaClient extends EventEmitter {
     try {
       await writeFile(_config.oidc_tokenset_file_path, JSON.stringify(set, null, 2));
     } catch (err) {
-      this.emit('error', 'Could not store OIDC tokenset to disk: ' + (err as Error).message);
+      this._emitter.emit('error', 'Could not store OIDC tokenset to disk: ' + (err as Error).message);
     }
   };
 

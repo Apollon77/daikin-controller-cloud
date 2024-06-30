@@ -31,28 +31,26 @@ The Onecta API limits each client application to 200 requests per day.
 ## Pre-requisites
 
 This library acts as an OIDC client towards the Onecta API and uses OIDC's
-`Authorization` grant to obtain the initial pair of OIDC tokens it will then
-use to communicate with the API itself. 
-
-As such, you'll have to provide the following:
+`Authorization` grant to obtain the initial pair of OIDC tokens.  As such, 
+you'll have to provide the following:
 
 1. The `Client ID` and `Client Secret` of a registered application tied to your
    Daiking Developer account. If you do not have such an account, yet, you can
-   sign up in the [Daikin Developer Portal][p1]
-2. The ability for the process that uses this library to listen on a TCP port
-   in order to start an HTTP server that your browser will be redirected to at
-   the end of the flow that characterizes the OIDC `Authorization` grant.
+   create one in the [Daikin Developer Portal][p1]
+2. The ability for the process that uses this library to listen on a local TCP
+   port (configurable) in order to start an HTTP server that your browser will
+   be redirected to at the end of the `Authorization` grant flow
 3. A domain name that resolves to the machine that hosts the process using this
-   library to be used, together with the port mentioned above, to compose the 
-   URL to be set as the application's `Redirect URI` in the
-   [Daikin Developer portal][p1]
+   library (if running locally you will not be able to use `localhost` as it is 
+   rejected by the Onecta API)
 
-Note that, if running locally, you will not be able to use the `localhost`
-domain as it is rejected by the Onecta API.
-
-Also note that the `Redirect URI` must use the secure `https:` protocol.
-This library ships uses its own self-signed certificate, which will cause your
-browser to present you with a security warning.
+You will have to combine the port (point 2.) and domain name (point 3.) to
+create the URL to be set as the application's `Redirect URI` in the
+[Daikin Developer portal][p1]. Note that the same URL **must** also be passed
+as a configuration parameter of the `DaikinCloudController` class. Also note
+that the `Redirect URI` must use the secure `https:` protocol and that this
+library ships with its own self-signed SSL/TLS certificate, which will cause
+your browser to present you with a security warning.
 
 [p1]: https://developer.cloud.daikineurope.com
 

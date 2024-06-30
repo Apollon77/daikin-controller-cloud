@@ -15,7 +15,8 @@
   "devDependencies": {
     "@alcalzone/release-script": "^3.7.0",
     "@types/node": "^20.14.9",
-    "pkg": "^5.8.1"
+    "pkg": "^5.8.1",
+    "typescript": "^5.5.2"
   },
   "repository": {
     "type": "git",

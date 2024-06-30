@@ -10,14 +10,11 @@
     "daikin"
   ],
   "dependencies": {
-    "finalhandler": "^1.2.0",
-    "@esm2cjs/got": "^12.5.3",
-    "http-mitm-proxy": "^1.0.0",
-    "openid-client": "^5.6.5",
-    "serve-static": "^1.15.0"
+    "openid-client": "^5.6.5"
   },
   "devDependencies": {
     "@alcalzone/release-script": "^3.7.0",
+    "@types/node": "^20.14.9",
     "pkg": "^5.8.1"
   },
   "repository": {

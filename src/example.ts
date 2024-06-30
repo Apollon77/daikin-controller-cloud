@@ -18,6 +18,8 @@ const controller = new DaikinCloudController({
   oidc_client_secret,
   oidc_callback_server_addr: '127.0.0.1',
   oidc_callback_server_port: 8765,
+  // This URL must be set as the application's callback URL within
+  // Daikin's developer console at https://developer.cloud.daikineurope.com
   oidc_callback_server_baseurl: 'https://daikin.local:8765',
   oidc_tokenset_file_path: resolve(homedir(), '.daikin-controller-cloud-tokenset'),
 });

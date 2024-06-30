@@ -6,8 +6,8 @@ export enum OnectaOIDCScope {
 };
 
 export enum OnectaAPIBaseUrl {
-  prod='https://api.onecta.daikineurope.com/v1',
-  mock='https://api.onecta.daikineurope.com/mock/v1',
+  prod='https://api.onecta.daikineurope.com',
+  mock='https://api.onecta.daikineurope.com/mock',
 };
 
 export enum OnectaOIDCEndpoint {

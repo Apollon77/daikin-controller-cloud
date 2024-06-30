@@ -2,7 +2,7 @@
 import { readFile, writeFile } from 'node:fs/promises';
 import { EventEmitter } from 'node:events';
 import { randomBytes } from 'node:crypto';
-import { BaseClient, TokenSet } from 'openid-client';
+import { BaseClient, TokenSet, Client } from 'openid-client';
 
 import { 
   OnectaOIDCScope, 
@@ -126,35 +126,14 @@ export class OnectaClient extends EventEmitter {
     return token_set;
   }
 
-  async listGatewayDevices() {
+  async requestResource(path: string, opts?: Parameters<typeof BaseClient.prototype.requestResource>[2]): Promise<any> {
     const token_set = await this._getTokenSet();
-    const url = `${OnectaAPIBaseUrl.prod}/gateway-devices`;
-    const res = await this._client.requestResource(url, token_set, {
-      method: 'GET',
-    });
-    return JSON.parse(res.body!.toString());
-  }
-
-  async getGatewayDevice(device_id: string) {
-    const token_set = await this._getTokenSet();
-    const url = `${OnectaAPIBaseUrl.prod}/gateway-devices/${device_id}`;
-    const res = await this._client.requestResource(url, token_set, {
-      method: 'GET',
-    });
-    return JSON.parse(res.body!.toString());
-  }
-
-  async setGatewayDeviceCharacteristic(device_id: string, point_id: string, characteristic: string, req_data: { path?: string; value: string | number | boolean; }): Promise<void> {
-    const token_set = await this._getTokenSet();
-    const url = `${OnectaAPIBaseUrl.prod}/gateway-devices/${device_id}/management-points/${point_id}/characteristics/${characteristic}`;
-    const { statusCode, body: res_body } = await this._client.requestResource(url, token_set, {
-      method: 'PATCH',
-      body: JSON.stringify(req_data),
-      headers: { 'content-type': 'application/json' },
-    });
-    if (statusCode === 204) return;
-    throw new Error('failed');
-    // const res_data = res_body ? JSON.parse(res_body.toString()) : null;
+    const url = `${OnectaAPIBaseUrl.prod}${path}`;
+    const res = await this._client.requestResource(url, token_set, opts);
+    if (res.body) {
+      return JSON.parse(res.body.toString());
+    }
+    return null;
   }
 
 }

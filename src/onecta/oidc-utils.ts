@@ -43,5 +43,6 @@ export interface OnectaClientConfig {
   oidc_callback_server_baseurl: string;
   oidc_callback_server_port: number;
   oidc_callback_server_addr: string;
+  oidc_authorization_timeout: number;
   oidc_tokenset_file_path: string;
 }

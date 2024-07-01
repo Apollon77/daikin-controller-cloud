@@ -33,6 +33,8 @@ const controller = new DaikinCloudController({
   oidc_callback_server_baseurl: 'https://daikin.local:8765',
   /* path of file used to cache the OIDC tokenset */
   oidc_tokenset_file_path: resolve(homedir(), '.daikin-controller-cloud-tokenset'),
+  /* time to wait for the user to go through the authorization grant flow before giving up (in seconds) */
+  oidc_authorization_timeout: 120,
 });
 
 // ============================================================================

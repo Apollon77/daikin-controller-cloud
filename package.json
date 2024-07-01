@@ -16,7 +16,7 @@
     "@alcalzone/release-script": "^3.7.0",
     "@types/node": "^20.14.9",
     "pkg": "^5.8.1",
-    "typescript": "^5.5.2"
+    "typescript": "~5.5.3"
   },
   "repository": {
     "type": "git",
@@ -26,6 +26,8 @@
     "url": "https://github.com/Apollon77/daikin-controller-cloud/issues"
   },
   "scripts": {
+    "prepare": "npm run build",
+    "build": "tsc -p .",
     "release": "release-script",
     "build-tokensaver": "pkg example/tokensaver.js"
   },

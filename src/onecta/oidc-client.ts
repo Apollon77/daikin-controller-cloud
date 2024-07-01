@@ -38,16 +38,22 @@ export class OnectaClient {
   private async _authorize(): Promise<TokenSet> {
     const { _config, _client } = this;
     const redirect_uri = _config.oidc_callback_server_baseurl;
-    const state = randomBytes(32).toString('hex');
+    const req_state = randomBytes(32).toString('hex');
     const auth_url = _client.authorizationUrl({
       scope: OnectaOIDCScope.basic,
-      state,
+      state: req_state,
       redirect_uri,
     });
     this._emitter.emit('authorization_request', auth_url);
     let auth_code: string | null = null;
     await startOnectaOIDCCallbackServer(this._config, function (srv, req, res) {
       const url = new URL(req.url ?? '/', _config.oidc_callback_server_baseurl);
+      const res_state = url.searchParams.get('state');
+      if (res_state !== req_state) {
+        res.statusCode = 404;
+        res.end();
+        return;
+      }
       auth_code = url.searchParams.get('code');
       if (auth_code) {
         res.statusCode = 200;
@@ -55,10 +61,10 @@ export class OnectaClient {
         res.end();
         srv.closeAllConnections();
         srv.close();
-      } else {
-        res.statusCode = 404;
-        res.end();
-      }
+        return;
+      } 
+      res.statusCode = 400;
+      res.end();
     });
     if (!auth_code) {
       throw new Error('OIDC authorization failed');

@@ -75,7 +75,8 @@ See [`src/example.ts`](./src/example.ts).
 
 ## Changelog:
 
-### 2.0.0 (unreleased)
+### __WORK IN PROGRESS__
+* BREAKING: Username/Passwort and Proxy Authentications are removed and replaced by the new Daikin Portal Authentication! You need to re-authenticate!
 * (jacoscaz) Port to Typescript
 * (jacoscaz) Switch to Daikin's OIDC-based Onecta API
 

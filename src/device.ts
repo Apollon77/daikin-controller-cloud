@@ -1,16 +1,24 @@
+
+import type { OnectaClient } from './onecta/oidc-client.js';
+
 /**
  * Class to represent and control one Daikin Cloud Device
  */
-class DaikinCloudDevice {
+export class DaikinCloudDevice {
+
+    client: OnectaClient;
+    desc: any;
+    managementPoints: Record<string, any>;
+
     /**
      * Constructor, called from DaikinCloud class when initializing all devices
      *
-     * @param {object} deviceDescription object with device description from Cloud request
-     * @param {any} cloudInstance Instance of DaikinCloud used for communication
+     * @param deviceDescription object with device description from Cloud request
+     * @param cloudInstance Instance of DaikinCloud used for communication
      */
-    constructor(deviceDescription, cloudInstance) {
-        this.cloud = cloudInstance;
-
+    constructor(deviceDescription: any, client: OnectaClient) {
+        this.managementPoints = {};
+        this.client = client;
         this.setDescription(deviceDescription);
     }
 
@@ -23,7 +31,7 @@ class DaikinCloudDevice {
      * @returns {object} collected data
      * @private
      */
-    _traverseDatapointStructure(obj, data, pathPrefix) {
+    _traverseDatapointStructure(obj: any, data?: any, pathPrefix?: string) {
         if (obj === null) return;
         data = data || {};
         pathPrefix = pathPrefix || '';
@@ -51,15 +59,15 @@ class DaikinCloudDevice {
     /**
      * Set a device description and parse/traverse data structure
      *
-     * @param {object} desc Device Description
+     * @param desc Device Description
      */
-    setDescription(desc) {
+    setDescription(desc: any) {
         this.desc = desc;
 
         // re-map some data for more easy access
         this.managementPoints = {};
-        this.desc.managementPoints.forEach(mp => {
-            const dataPoints =  {};
+        this.desc.managementPoints.forEach((mp: any) => {
+            const dataPoints: any = {};
             Object.keys(mp).forEach((key) => {
                 if (!mp[key] || typeof mp[key] !== 'object') return; // we ignore non dataPoints
 
@@ -121,7 +129,7 @@ class DaikinCloudDevice {
      * @param {string} [dataPointPath] further detailed datapoints with subpath data
      * @returns {object|null} Data object
      */
-    getData(managementPoint, dataPoint, dataPointPath) {
+    getData(managementPoint: any, dataPoint: any, dataPointPath: any) {
         if (!managementPoint) { // return all data
             return this.managementPoints;
         }
@@ -154,7 +162,7 @@ class DaikinCloudDevice {
      */
     async updateData() {
         // TODO: Enhance this method to also allow to get some partial data like only one managementPoint or such; needs checking how to request
-        const desc = await this.cloud.doBearerRequest('/v1/gateway-devices/' + this.getId());
+        const desc = await this.client.requestResource('/v1/gateway-devices/' + this.getId());
         this.setDescription(desc);
         return true;
     }
@@ -167,7 +175,7 @@ class DaikinCloudDevice {
      * @throws Error
      * @private
      */
-    _validateData(def, value) {
+    _validateData(def: any, value: any) {
         if (!def.hasOwnProperty('value') && !def.hasOwnProperty('settable')) {
             throw new Error('Value can not be set without dataPointPath');
         }
@@ -207,7 +215,7 @@ class DaikinCloudDevice {
      * @param {number|string} value Value to set
      * @returns {Promise<Object|boolean>} should return a true - or if a body is returned teh body object (can this happen?)
      */
-    async setData(managementPoint, dataPoint, dataPointPath, value) {
+    async setData(managementPoint: any, dataPoint: any, dataPointPath: any, value: any) {
         if (value === undefined) {
             value = dataPointPath;
             dataPointPath = undefined;
@@ -228,8 +236,8 @@ class DaikinCloudDevice {
         const setOptions = {
             method: 'PATCH',
             body: JSON.stringify(setBody)
-        };
-        return this.cloud.doBearerRequest(setPath, setOptions);
+        } as const;
+        return this.client.requestResource(setPath, setOptions);
     }
 
 }

@@ -11,74 +11,74 @@ Library to generate/retrieve tokens to communicate with the Daikin cloud and to 
 **Daikin is a trademark of DAIKIN INDUSTRIES, LTD.**
 
 ## Description
-The newer Daikin devices sold since 2020 contain a newer Wifi Adapter (e.g. BRP069C4x) which only connects to the Daikin Cloud and is no longer reachable locally. These devices are only controllable with the Daikin Onecta App.
+The newer Daikin devices sold since 2020 contain a newer Wifi Adapter
+(e.g. BRP069C4x) which only connects to the Daikin Cloud and is no longer
+reachable locally. These devices are only controllable through the Daikin
+Onecta API, which uses the OpenID Connect (OIDC) protocol for client
+authentication and authorization purposes.
 
-This library allows to initially (hopefully once) retrieve tokens by using a proxy to login to the Daikin Cloud. After that these tokens can be used and refreshed to interact with the devices.
+This library facilitates interacting with the Onecta API by providing an
+abstraction over OIDC flows and token management.
 
-Note: For devices with older WLAN-Adapters like **BRP069A4x** which can only be used by the Daikin Controller App please use the [Daikin-Controller](https://github.com/Apollon77/daikin-controller) lib instead.
-
-### Login with E-Mail/Password
-The easy mode is to use the `login`method of the `DaikinControllerCloud` class and provide the E-Mail and the Password.
-
-An automatic login is tried in this case and the tokens are retrieved.
-
-It can happen that this process do not work because the Daikin Website requires you to solve a captcha. In this can you can use the following trick:
-* Start the proxy
-* Call the proxy URL on port 8889
-* You **do not** need to import the certificate!
-* Just click on the `Login into the Daikin Cloud to retrieve the tokens` link at the end of the instructions page and login there once and solve the captcha.
-* Close the browser window and try the automatic login again
-
-### Login with Proxy
-**For more information on the Proxy progress for end users - because you need to trust and whitelist them and such - can be found in [PROXY.md](PROXY.md)!**
-Info: This project is not grabbing any username or password, just the created tokens after you logged in.
+Note: For devices with older WLAN-Adapters like **BRP069A4x** which can only be
+used by the Daikin Controller App please use the
+[Daikin-Controller](https://github.com/Apollon77/daikin-controller) lib instead.
 
 ## IMPORTANT
-When you integrate this library please make sure users do not refresh data out of the cloud too fast. Please still think about the needed resources and costs on Daikin side to operate the cloud services and only allow meaningful poll intervals!
+
+The Onecta API limits each client application to 200 requests per day.
+
+## Pre-requisites
+
+This library acts as an OIDC client towards the Onecta API and uses OIDC's
+`Authorization` grant to obtain the initial pair of OIDC tokens.  As such, 
+you'll have to provide the following:
+
+1. The `Client ID` and `Client Secret` of a registered application tied to your
+   Daiking Developer account. If you do not have such an account, yet, you can
+   create one in the [Daikin Developer Portal][p1]
+2. The ability for the process that uses this library to listen on a local TCP
+   port (configurable) in order to start an HTTP server that your browser will
+   be redirected to at the end of the `Authorization` grant flow
+3. A domain name that resolves to the machine that hosts the process using this
+   library (if running locally you will not be able to use `localhost` as it is 
+   rejected by the Onecta API)
+
+You will have to combine the port (point 2.) and domain name (point 3.) to
+create the URL to be set as the application's `Redirect URI` in the
+[Daikin Developer portal][p1]. Note that the same URL **must** also be passed
+as a configuration parameter of the `DaikinCloudController` class. Also note
+that the `Redirect URI` must use the secure `https:` protocol and that this
+library ships with its own self-signed SSL/TLS certificate, which will cause
+your browser to present you with a security warning.
+
+[p1]: https://developer.cloud.daikineurope.com
 
 ## Install
 For now while being in basic development install from Github:
 
 `npm i Apollon77/daikin-controller-cloud`
 
-## Using tokensaver.js
-
-If your only interest is to save the tokens exchanged by Daikin Cloud and yourself (for instance, when you want to use them with your own code or home automation), use the tokensaver.js in the `example` folder
-
-From within the main directory, run:
-
-`node example/tokensaver.js`
-
-Or, more conveniently, use one of the binaries (Linux, macOS and Windows) supplied with the [Releases](https://github.com/Apollon77/daikin-controller-cloud/releases).
-Alternatively you can execute `npx daikin-controller-cloud` which will also execute the tokensaver.js without the need to install the library (Node.js is required to be installed).
-
-Calling tokensaver.js without any parameters will open a proxy where you can login to the Daikin Cloud and the tokens will be fetched.
-
-Alternatively execute
-
-`node tokensaver.js "mydaikin@email.com" "my-daikin-password"`
-
-(replace data with your daikin cloud login credentials) and we try to fetch the tokens without the proxy.
-
-
 ## Code-Usage example
-See example folder, check the settings (add your own IP at minimum!) and start it with `node example.js`.
-
-When getting or setting data you need to look at the complete data structure returned by the device. SO best go a "getData()" and check the structure. The getData/setData parameters mirror the structure. In fact you awlways eed to provide the first two levels, maybe a "path style third level".
+See [`src/example.ts`](./src/example.ts).
 
 ## Issue reporting and enhancements
 * Create Issues here in Github
 * Provide PRs for actual changes and enhancements to code or documentation!
 
 ## Todos
-* Mooooaaar documentation, especially for proxy use for endusers and development
+* Mooooaaar documentation
 * Add Tests
-* Implement internal update of values when a new value is set? Or reload data after a set action automatically?
+* Implement internal update of values when a new value is set? Or reload data
+  after a set action automatically?
 * Implement interval data update in library or only from outside?
-* The mitm proxy library is not closing the proxy correct, so the promise never gets resolved ... need to check on that.
-
 
 ## Changelog:
+
+### 2.0.0 (unreleased)
+* (jacoscaz) Port to Typescript
+* (jacoscaz) Switch to Daikin's OIDC-based Onecta API
+
 ### 1.2.4 (2023-09-09)
 * (Apollon77) Make sure to store only existing refresh tokens
 

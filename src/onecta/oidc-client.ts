@@ -17,7 +17,6 @@ import {
 } from './oidc-callback-server.js';
 
 export class OnectaClient {
-
     private _config: OnectaClientConfig;
     private _client: BaseClient;
     private _token_set: TokenSet | null;
@@ -28,68 +27,73 @@ export class OnectaClient {
         this._config = config;
         this._emitter = emitter;
         this._client = new onecta_oidc_issuer.Client({
-            client_id: config.oidc_client_id,
-            client_secret: config.oidc_client_secret,
+            client_id: config.oidcClientId,
+            client_secret: config.oidcClientSecret,
         });
-        this._token_set = null;
+        this._token_set = config.tokenSet ? new TokenSet(config.tokenSet) : null;
         this._get_token_set_queue = [];
+        if (!config.oidcCallbackServerBaseUrl) {
+            config.oidcCallbackServerBaseUrl = `https://${config.oidcCallbackServerExternalAddress ?? config.oidcCallbackServerBindAddr}:${config.oidcCallbackServerPort}`;
+        }
     }
 
     private async _authorize(): Promise<TokenSet> {
         const { _config, _client } = this;
-        const redirect_uri = _config.oidc_callback_server_baseurl;
+        const redirect_uri = _config.oidcCallbackServerBaseUrl;
         const req_state = randomBytes(32).toString('hex');
         const auth_url = _client.authorizationUrl({
             scope: OnectaOIDCScope.basic,
             state: req_state,
             redirect_uri,
         });
-        this._emitter.emit('authorization_request', _config.oidc_callback_server_baseurl);
+        this._emitter.emit('authorization_request', _config.oidcCallbackServerBaseUrl);
         const auth_code =
-            _config.custom_oidc_code_receiver
-                ? await _config.custom_oidc_code_receiver(auth_url, req_state)
+            _config.customOidcCodeReceiver
+                ? await _config.customOidcCodeReceiver(auth_url, req_state)
                 : await startOnectaOIDCCallbackServer(this._config, req_state, auth_url);
-        const token_set = await _client.grant({
+        return await _client.grant({
             grant_type: 'authorization_code',
-            client_id: _config.oidc_client_id,
-            client_secret: _config.oidc_client_secret,
+            client_id: _config.oidcClientId,
+            client_secret: _config.oidcClientSecret,
             code: auth_code,
             redirect_uri,
         });
-        return token_set;
     }
 
     private async _refresh(refresh_token: string): Promise<TokenSet> {
         const { _client, _config } = this;
-        const token_set = await _client.grant({
+        return await _client.grant({
             grant_type: 'refresh_token',
-            client_id: _config.oidc_client_id,
-            client_secret: _config.oidc_client_secret,
+            client_id: _config.oidcClientId,
+            client_secret: _config.oidcClientSecret,
             refresh_token,
         });
-        return token_set;
     }
 
     private async _loadTokenSet(): Promise<TokenSet | null> {
         const { _config } = this;
-        try {
-            const data = await readFile(_config.oidc_tokenset_file_path, 'utf8');
-            const token_set = new TokenSet(JSON.parse(data));
-            return token_set;
-        } catch (err) {
-            if ((err as { code?: string }).code !== 'ENOENT') {
-                this._emitter.emit('error', 'Could not load OIDC tokenset from disk: ' + (err as Error).message);
+        if (_config.oidcTokenSetFilePath) {
+            try {
+                const data = await readFile(_config.oidcTokenSetFilePath, 'utf8');
+                return new TokenSet(JSON.parse(data));
+            } catch (err) {
+                if ((err as { code?: string }).code !== 'ENOENT') {
+                    this._emitter.emit('error', 'Could not load OIDC tokenset from disk: ' + (err as Error).message);
+                }
             }
-            return null;
         }
+        return null;
     }
 
     private async _storeTokenSet(set: TokenSet): Promise<void> {
         const { _config } = this;
-        try {
-            await writeFile(_config.oidc_tokenset_file_path, JSON.stringify(set, null, 2));
-        } catch (err) {
-            this._emitter.emit('error', 'Could not store OIDC tokenset to disk: ' + (err as Error).message);
+        this._emitter.emit('token_update', set);
+        if (_config.oidcTokenSetFilePath) {
+            try {
+                await writeFile(_config.oidcTokenSetFilePath, JSON.stringify(set, null, 2));
+            } catch (err) {
+                this._emitter.emit('error', 'Could not store OIDC tokenset to disk: ' + (err as Error).message);
+            }
         }
     };
 

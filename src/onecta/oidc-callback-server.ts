@@ -1,7 +1,5 @@
-
 import type { IncomingMessage, ServerResponse } from 'node:http';
-
-import { resolve, join } from 'node:path';
+import { resolve } from 'node:path';
 import { createServer, Server } from 'node:https';
 import { readFile } from 'node:fs/promises';
 import { OnectaClientConfig, onecta_oidc_auth_thank_you_html } from './oidc-utils.js';
@@ -59,13 +57,13 @@ export const startOnectaOIDCCallbackServer = async (config: OnectaClientConfig, 
         };
         const onRequest = (req: IncomingMessage, res: ServerResponse) => {
             const url = new URL(req.url ?? '/', config.oidcCallbackServerBaseUrl);
-            const res_state = url.searchParams.get('state');
-            const auth_code = url.searchParams.get('code');
-            if (res_state === oidc_state && auth_code) {
+            const resState = url.searchParams.get('state');
+            const authCode = url.searchParams.get('code');
+            if (resState === oidc_state && authCode) {
                 res.statusCode = 200;
                 res.write(config.onectaOidcAuthThankYouHtml ?? onecta_oidc_auth_thank_you_html);
-                res.once('finish', () => onAuthCode(auth_code));
-            } else if (!res_state && !auth_code && (req.url ?? '/') === '/') {
+                res.once('finish', () => onAuthCode(authCode));
+            } else if (!resState && !authCode && (req.url ?? '/') === '/') {
                 //Redirect to auth_url
                 res.writeHead(302, {
                     'Location': auth_url,

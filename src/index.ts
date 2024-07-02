@@ -1,7 +1,5 @@
-
 import { EventEmitter } from 'events';
 import { DaikinCloudDevice } from './device.js';
-
 import { OnectaClient } from './onecta/oidc-client.js';
 import { OnectaClientConfig } from './onecta/oidc-utils.js';
 
@@ -14,12 +12,11 @@ export declare interface DaikinCloudController {
  * Daikin Controller for Cloud solution to get tokens and interact with devices
  */
 export class DaikinCloudController extends EventEmitter {
-    
-    private client: OnectaClient;
+    #client: OnectaClient;
 
     constructor(config: OnectaClientConfig) {
         super();
-        this.client = new OnectaClient(config, this);
+        this.#client = new OnectaClient(config, this);
     }
 
     /**
@@ -27,7 +24,7 @@ export class DaikinCloudController extends EventEmitter {
      * @returns {Promise<Object>} API Info object
      */
     async getApiInfo() {
-        return this.client.requestResource('/v1/info');
+        return this.#client.requestResource('/v1/info');
     }
 
     /**
@@ -35,7 +32,7 @@ export class DaikinCloudController extends EventEmitter {
      * @returns {Promise<Object>} pure Device details
      */
     async getCloudDeviceDetails(): Promise<any[]> {
-        return await this.client.requestResource('/v1/gateway-devices');
+        return await this.#client.requestResource('/v1/gateway-devices');
     }
 
     /**
@@ -43,7 +40,6 @@ export class DaikinCloudController extends EventEmitter {
      */
     async getCloudDevices(): Promise<DaikinCloudDevice[]> {
         const devices = await this.getCloudDeviceDetails();
-        return devices.map(dev => new DaikinCloudDevice(dev, this.client));
+        return devices.map(dev => new DaikinCloudDevice(dev, this.#client));
     }
-
 }

@@ -1,12 +1,10 @@
-
 import type { OnectaClient } from './onecta/oidc-client.js';
 
 /**
  * Class to represent and control one Daikin Cloud Device
  */
 export class DaikinCloudDevice {
-
-    client: OnectaClient;
+    #client: OnectaClient;
     desc: any;
     managementPoints: Record<string, any>;
 
@@ -18,17 +16,17 @@ export class DaikinCloudDevice {
      */
     constructor(deviceDescription: any, client: OnectaClient) {
         this.managementPoints = {};
-        this.client = client;
+        this.#client = client;
         this.setDescription(deviceDescription);
     }
 
     /**
      * Helper method to traverse the Device object returned by Daikin cloud for subPath datapoints
      *
-     * @param {object} obj Object to traverse
-     * @param {object} data Data object where all data are collected
-     * @param {string} [pathPrefix] remember the path when traversing through structure
-     * @returns {object} collected data
+     * @param obj Object to traverse
+     * @param data Data object where all data are collected
+     * @param [pathPrefix] remember the path when traversing through structure
+     * @returns collected data
      * @private
      */
     _traverseDatapointStructure(obj: any, data?: any, pathPrefix?: string) {
@@ -86,16 +84,16 @@ export class DaikinCloudDevice {
 
     /**
      * Get Daikin Device UUID
-     * @returns {string} Device Id (UUID)
+     * @returns Device Id (UUID)
      */
-    getId() {
+    getId(): string {
         return this.desc.id;
     }
 
     /**
      * Get the original Daikin Device Description
      *
-     * @returns {object} Daikin Device Description
+     * @returns Daikin Device Description
      */
     getDescription() {
         return this.desc;
@@ -162,7 +160,7 @@ export class DaikinCloudDevice {
      */
     async updateData() {
         // TODO: Enhance this method to also allow to get some partial data like only one managementPoint or such; needs checking how to request
-        const desc = await this.client.requestResource('/v1/gateway-devices/' + this.getId());
+        const desc = await this.#client.requestResource('/v1/gateway-devices/' + this.getId());
         this.setDescription(desc);
         return true;
     }
@@ -237,6 +235,6 @@ export class DaikinCloudDevice {
             method: 'PATCH',
             body: JSON.stringify(setBody)
         } as const;
-        return this.client.requestResource(setPath, setOptions);
+        return this.#client.requestResource(setPath, setOptions);
     }
 }

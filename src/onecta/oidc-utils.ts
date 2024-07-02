@@ -1,21 +1,20 @@
-
-import {Issuer, TokenSet} from 'openid-client';
+import { Issuer, TokenSet } from 'openid-client';
 
 export enum OnectaOIDCScope {
-    basic='openid onecta:basic.integration',
-};
+    basic = 'openid onecta:basic.integration',
+}
 
 export enum OnectaAPIBaseUrl {
-    prod='https://api.onecta.daikineurope.com',
-    mock='https://api.onecta.daikineurope.com/mock',
-};
+    prod = 'https://api.onecta.daikineurope.com',
+    mock = 'https://api.onecta.daikineurope.com/mock',
+}
 
 export enum OnectaOIDCEndpoint {
-    authorization='https://idp.onecta.daikineurope.com/v1/oidc/authorize',
-    token='https://idp.onecta.daikineurope.com/v1/oidc/token',
-    revocation='https://idp.onecta.daikineurope.com/v1/oidc/revoke',
-    introspection='https://idp.onecta.daikineurope.com/v1/oidc/introspect',
-};
+    authorization = 'https://idp.onecta.daikineurope.com/v1/oidc/authorize',
+    token = 'https://idp.onecta.daikineurope.com/v1/oidc/token',
+    revocation = 'https://idp.onecta.daikineurope.com/v1/oidc/revoke',
+    introspection = 'https://idp.onecta.daikineurope.com/v1/oidc/introspect',
+}
 
 export const onecta_oidc_issuer = new Issuer({
     issuer: 'Daikin',

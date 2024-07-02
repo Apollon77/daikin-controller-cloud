@@ -47,4 +47,5 @@ export interface OnectaClientConfig {
     oidc_tokenset_file_path: string;
     certificate_path: string;
     onecta_oidc_auth_thank_you_html?: string;
+    custom_oidc_code_receiver?: (auth_url: string, state: string) => Promise<string>;
 }

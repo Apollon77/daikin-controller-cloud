@@ -66,7 +66,7 @@ export const startOnectaOIDCCallbackServer = async (config: OnectaClientConfig, 
                 res.statusCode = 200;
                 res.write(config.onecta_oidc_auth_thank_you_html ?? onecta_oidc_auth_thank_you_html);
                 res.once('finish', () => onAuthCode(auth_code));
-            } else if (req.url ?? '/' === '/') {
+            } else if (!res_state && !auth_code && (req.url ?? '/') === '/') {
                 //Redirect to auth_url
                 res.writeHead(302, {
                     'Location': auth_url,

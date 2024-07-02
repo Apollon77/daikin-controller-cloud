@@ -14,7 +14,7 @@ export class DaikinCloudDevice {
      * Constructor, called from DaikinCloud class when initializing all devices
      *
      * @param deviceDescription object with device description from Cloud request
-     * @param cloudInstance Instance of DaikinCloud used for communication
+     * @param client Instance of DaikinCloud used for communication
      */
     constructor(deviceDescription: any, client: OnectaClient) {
         this.managementPoints = {};
@@ -239,7 +239,4 @@ export class DaikinCloudDevice {
         } as const;
         return this.client.requestResource(setPath, setOptions);
     }
-
 }
-
-module.exports = DaikinCloudDevice;

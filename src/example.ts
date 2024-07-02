@@ -30,7 +30,7 @@ const controller = new DaikinCloudController({
   /* port that the HTTP server should bind to */
   oidc_callback_server_port: 8765,
   /* OIDC Redirect URI */
-  oidc_callback_server_baseurl: 'https://192.168.68.23:8765', // or use local IP address where server is reachable
+  oidc_callback_server_baseurl: 'https://daikin.local:8765', // or use local IP address where server is reachable
   /* path of file used to cache the OIDC tokenset */
   oidc_tokenset_file_path: resolve(homedir(), '.daikin-controller-cloud-tokenset'),
   /* time to wait for the user to go through the authorization grant flow before giving up (in seconds) */

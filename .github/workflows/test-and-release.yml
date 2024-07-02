@@ -47,7 +47,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        node-version: [16.x, 18.x, 20.x]
+        node-version: [16.x, 18.x, 20.x, 22.x]
         os: [ubuntu-latest, windows-latest, macos-latest]
 
     steps:
@@ -99,6 +99,9 @@ jobs:
           BODY="${BODY//$'\n'/'%0A'}"
           BODY="${BODY//$'\r'/'%0D'}"
           echo "::set-output name=BODY::$BODY"
+          if [[ $VERSION == *"-"* ]] ; then
+            echo "::set-output name=TAG::--tag next"
+          fi
 
       - name: Install Dependencies
         run: npm ci
@@ -109,7 +112,7 @@ jobs:
         run: |
           npm config set //registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}
           npm whoami
-          npm publish
+          npm publish ${{ steps.extract_release.outputs.TAG }}
 
       - name: Create Github Release
         id: create_release

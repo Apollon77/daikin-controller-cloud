@@ -7,11 +7,11 @@ C = US
 ST = State
 L = Location
 O = Organization Name
-OU = Organizational Unit 
-CN = daikin-onecta2mqtt.local
+OU = Organizational Unit
+CN = daikin.local
 [v3_req]
 keyUsage = critical, digitalSignature, keyAgreement
 extendedKeyUsage = serverAuth
 subjectAltName = @alt_names
 [alt_names]
-DNS.1 = daikin-onecta2mqtt.local
+DNS.1 = daikin.local

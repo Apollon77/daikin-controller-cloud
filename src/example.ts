@@ -30,7 +30,7 @@ const controller = new DaikinCloudController({
   /* port that the HTTP server should bind to */
   oidc_callback_server_port: 8765,
   /* OIDC Redirect URI */
-  oidc_callback_server_baseurl: 'https://daikin.local:8765', // or use local IP address where server is reachable
+  oidc_callback_server_baseurl: 'https://192.168.68.23:8765', // or use local IP address where server is reachable
   /* path of file used to cache the OIDC tokenset */
   oidc_tokenset_file_path: resolve(homedir(), '.daikin-controller-cloud-tokenset'),
   /* time to wait for the user to go through the authorization grant flow before giving up (in seconds) */
@@ -46,7 +46,12 @@ const controller = new DaikinCloudController({
 // ============================================================================
 
 controller.on('authorization_request', (url) => {
-  console.log('Please navigate to %s, accept the security warning for the self signed certificate. Afterwards you are redirected to Daikin to approve the access and then redirected back.', url);
+  console.log(`
+Please make sure that ${url} is set as "Redirect URL" in your Daikin Developer Portal account for the used Client!
+ 
+Then please open the URL ${url} in your browser and accept the security warning for the self signed certificate (if you open this for the first time).
+ 
+Afterwards you are redirected to Daikin to approve the access and then redirected back.`);
 });
 
 (async () => {

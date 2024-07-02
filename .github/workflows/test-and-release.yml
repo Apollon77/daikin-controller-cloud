@@ -25,7 +25,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [18.x]
+        node-version: [20.x]
 
     steps:
       - uses: actions/checkout@v4
@@ -34,9 +34,10 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
 
-
       - name: Install Dependencies
         run: npm ci
+      - name: Build project
+        run: npm run build
 
   # Runs adapter tests on all supported node versions and OSes
   lib-tests:
@@ -59,6 +60,8 @@ jobs:
 
       - name: Install Dependencies
         run: npm ci
+      - name: Build project
+        run: npm run build
 
 #      - name: Run local tests
 #        run: npm test
@@ -105,9 +108,10 @@ jobs:
 
       - name: Install Dependencies
         run: npm ci
-        #Automatically generate binaries for Win/MacOS/Linux
-      - name: Create Tokensaver binaries
-        run: npm run build-tokensaver
+
+      - name: Build project
+        run: npm run build
+
       - name: Publish package to npm
         run: |
           npm config set //registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}

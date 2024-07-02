@@ -17,7 +17,7 @@ if (!oidc_client_id || !oidc_client_secret) {
 // Create a new instance of the Onecta API client. Note that the
 // `oidc_callback_server_baseurl` **must** be set as the application's
 // "Redirect URI" within the Daikin Developer Portal.
-// See https://developer.cloud.daikineurope.com . 
+// See https://developer.cloud.daikineurope.com .
 // ============================================================================
 
 const controller = new DaikinCloudController({
@@ -26,15 +26,16 @@ const controller = new DaikinCloudController({
   /* OIDC client secret */
   oidc_client_secret,
   /* network interface that the HTTP server should bind to */
-  oidc_callback_server_addr: '127.0.0.1',
+  oidc_callback_server_addr: '0.0.0.0',
   /* port that the HTTP server should bind to */
   oidc_callback_server_port: 8765,
   /* OIDC Redirect URI */
-  oidc_callback_server_baseurl: 'https://daikin.local:8765',
+  oidc_callback_server_baseurl: 'https://daikin.local:8765', // or use local IP address where server is reachable
   /* path of file used to cache the OIDC tokenset */
   oidc_tokenset_file_path: resolve(homedir(), '.daikin-controller-cloud-tokenset'),
   /* time to wait for the user to go through the authorization grant flow before giving up (in seconds) */
   oidc_authorization_timeout: 120,
+  certificate_path: resolve(__dirname, '..', 'cert'),
 });
 
 // ============================================================================
@@ -45,7 +46,7 @@ const controller = new DaikinCloudController({
 // ============================================================================
 
 controller.on('authorization_request', (url) => {
-  console.log('Please navigate to %s', url);
+  console.log('Please navigate to %s, accept the security warning for the self signed certificate. Afterwards you are redirected to Daikin to approve the access and then redirected back.', url);
 });
 
 (async () => {
@@ -53,7 +54,7 @@ controller.on('authorization_request', (url) => {
   // ==========================================================================
   // OIDC authentication, authorization and token management are all abstracted
   // away. The public methods exposed by the client map to the endpoints
-  // provided by the Onecta API. 
+  // provided by the Onecta API.
   // See https://developer.cloud.daikineurope.com/spec/b0dffcaa-7b51-428a-bdff-a7c8a64195c0/70b10aca-1b4c-470b-907d-56879784ea9c
   // ==========================================================================
 

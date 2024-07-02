@@ -32,7 +32,7 @@ export const onecta_oidc_auth_thank_you_html = `
 </head>
 <body>
   <h1>Authorization complete</h1>
-  <p>Thank you for authorizing <code>daikin-onecta2mqtt</code> to access your devices.</p>
+  <p>Thank you for authorizing <code>daikin-controller-cloud</code> to access your devices.</p>
 </body>
 </html>
 `;
@@ -45,4 +45,6 @@ export interface OnectaClientConfig {
     oidc_callback_server_addr: string;
     oidc_authorization_timeout: number;
     oidc_tokenset_file_path: string;
+    certificate_path: string;
+    onecta_oidc_auth_thank_you_html?: string;
 }

@@ -44,8 +44,8 @@ export class OnectaClient {
             state: req_state,
             redirect_uri,
         });
-        this._emitter.emit('authorization_request', auth_url);
-        const auth_code = await startOnectaOIDCCallbackServer(this._config, req_state);
+        this._emitter.emit('authorization_request', _config.oidc_callback_server_baseurl);
+        const auth_code = await startOnectaOIDCCallbackServer(this._config, req_state, auth_url);
         const token_set = await _client.grant({
             grant_type: 'authorization_code',
             client_id: _config.oidc_client_id,

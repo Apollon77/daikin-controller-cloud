@@ -1,7 +1,7 @@
 
 import type { IncomingMessage, ServerResponse } from 'node:http';
 
-import { resolve } from 'node:path';
+import { resolve, join } from 'node:path';
 import { createServer, Server } from 'node:https';
 import { readFile } from 'node:fs/promises';
 import { OnectaClientConfig, onecta_oidc_auth_thank_you_html } from './oidc-utils.js';
@@ -14,10 +14,11 @@ export type OnectaOIDCCallbackServerRequestListener<
 /**
  * Creates and starts a HTTPS server
  */
-export const startOnectaOIDCCallbackServer = async (config: OnectaClientConfig, oidc_state: string): Promise<string> => {
+export const startOnectaOIDCCallbackServer = async (config: OnectaClientConfig, oidc_state: string, auth_url: string): Promise<string> => {
+    const certificatePath = config.certificate_path ?? resolve(__dirname, '..', '..', 'cert');
     const server = createServer({
-        key: await readFile(resolve(__dirname, '..', '..', 'cert', 'cert.key')),
-        cert: await readFile(resolve(__dirname, '..', '..', 'cert', 'cert.pem')),
+        key: await readFile(join(certificatePath, 'cert.key')),
+        cert: await readFile(join(certificatePath, 'cert.pem')),
     });
     await new Promise<void>((resolve, reject) => {
         const cleanup = () => {
@@ -63,9 +64,15 @@ export const startOnectaOIDCCallbackServer = async (config: OnectaClientConfig, 
             const auth_code = url.searchParams.get('code');
             if (res_state === oidc_state && auth_code) {
                 res.statusCode = 200;
-                res.write(onecta_oidc_auth_thank_you_html);
+                res.write(config.onecta_oidc_auth_thank_you_html ?? onecta_oidc_auth_thank_you_html);
                 res.once('finish', () => onAuthCode(auth_code));
-            } else {
+            } else if (req.url ?? '/' === '/') {
+                //Redirect to auth_url
+                res.writeHead(302, {
+                    'Location': auth_url,
+                });
+            }
+            else {
                 res.statusCode = 400;
             }
             res.end();

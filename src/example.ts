@@ -56,6 +56,16 @@ Then please open the URL ${url} in your browser and accept the security warning 
 Afterwards you are redirected to Daikin to approve the access and then redirected back.`);
 });
 
+// ============================================================================
+// The client instance will emit the "rate_limit" event on every request,
+// relaying the information returned by the Onecta API on the state of its rate
+// limiting.
+// ============================================================================
+
+controller.on('rate_limit', (rateLimitStatus) => {
+    console.log(rateLimitStatus);
+});
+
 (async () => {
 
     // ==========================================================================

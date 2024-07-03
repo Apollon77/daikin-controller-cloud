@@ -29,7 +29,7 @@ export class DaikinCloudDevice {
      * @returns collected data
      * @private
      */
-    _traverseDatapointStructure(obj: any, data?: any, pathPrefix?: string) {
+    #traverseDatapointStructure(obj: any, data?: any, pathPrefix?: string) {
         if (obj === null) return;
         data = data || {};
         pathPrefix = pathPrefix || '';
@@ -46,7 +46,7 @@ export class DaikinCloudDevice {
                 data[pathPrefix + '/' + sub] = obj[sub];
             } else if (typeof obj[sub] === 'object' && obj[sub] !== null) { // go one level deeper
                 //console.log('   found ' + sub);
-                this._traverseDatapointStructure(obj[sub], data, pathPrefix + '/' + sub);
+                this.#traverseDatapointStructure(obj[sub], data, pathPrefix + '/' + sub);
             } else {
                 //console.log('HHHMMM ' + sub);
             }
@@ -72,7 +72,7 @@ export class DaikinCloudDevice {
                 if (typeof mp[key].value !== 'object' || (Object.keys(mp[key].value).length === 1 && mp[key].value.hasOwnProperty('enabled'))) { // normal datatype like string or number
                     dataPoints[key] = mp[key]; // we simply take of the datapoint
                 } else { // data goes deeper in structure
-                    dataPoints[key] = this._traverseDatapointStructure(mp[key].value);
+                    dataPoints[key] = this.#traverseDatapointStructure(mp[key].value);
                     //console.log('RES-KEY ' + mp.embeddedId + ' - ' + key + ': ' + JSON.stringify(dataPoints[key]));
                 }
             });
@@ -173,7 +173,7 @@ export class DaikinCloudDevice {
      * @throws Error
      * @private
      */
-    _validateData(def: any, value: any) {
+    #validateData(def: any, value: any) {
         if (!def.hasOwnProperty('value') && !def.hasOwnProperty('settable')) {
             throw new Error('Value can not be set without dataPointPath');
         }
@@ -224,7 +224,7 @@ export class DaikinCloudDevice {
         }
 
         const dataPointDef = dataPointPath ? this.managementPoints[managementPoint][dataPoint][dataPointPath] : this.managementPoints[managementPoint][dataPoint];
-        this._validateData(dataPointDef, value);
+        this.#validateData(dataPointDef, value);
 
         const setPath =  '/v1/gateway-devices/' + this.getId() + '/management-points/' + managementPoint + '/characteristics/' + dataPoint;
         const setBody = {
@@ -233,7 +233,10 @@ export class DaikinCloudDevice {
         };
         const setOptions = {
             method: 'PATCH',
-            body: JSON.stringify(setBody)
+            body: JSON.stringify(setBody),
+            headers: {
+                'Content-Type': 'application/json'
+            }
         } as const;
         return this.#client.requestResource(setPath, setOptions);
     }

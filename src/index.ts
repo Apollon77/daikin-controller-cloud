@@ -2,16 +2,18 @@ import { EventEmitter } from 'events';
 import { DaikinCloudDevice } from './device.js';
 import { OnectaClient } from './onecta/oidc-client.js';
 import { OnectaClientConfig } from './onecta/oidc-utils.js';
+import { TokenSet } from "openid-client";
 
-export declare interface DaikinCloudController {
-    on(event: 'error', listener: (err: Error) => any): this;
-    on(event: 'authorization_request', listener: (url: string) => any): this;
+interface DaikinCloudControllerEvents {
+    "error": [err: Error];
+    "authorization_request": [url: string];
+    "token_update": [tokenSet: TokenSet];
 }
 
 /**
  * Daikin Controller for Cloud solution to get tokens and interact with devices
  */
-export class DaikinCloudController extends EventEmitter {
+export class DaikinCloudController extends EventEmitter<DaikinCloudControllerEvents> {
     #client: OnectaClient;
 
     constructor(config: OnectaClientConfig) {

@@ -133,10 +133,15 @@ export class OnectaClient {
         const tokenSet = await this.#getTokenSetQueued();
         const url = `${OnectaAPIBaseUrl.prod}${path}`;
         const res = await this.#client.requestResource(url, tokenSet, opts);
-        if (res.body) {
-            return JSON.parse(res.body.toString());
+        switch (res.statusCode) {
+            case 200:
+                return res.body ? JSON.parse(res.body.toString()) :  null;
+            case 400:
+                throw new Error(`Bad API request: ${JSON.parse(res.body!.toString()).message}`);
+            case 500:
+            default:
+                throw new Error(`Unexpected API error`);
         }
-        return null;
     }
 
 }

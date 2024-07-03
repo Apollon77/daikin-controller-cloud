@@ -1,9 +1,14 @@
 import type { OnectaClient } from './onecta/oidc-client.js';
+import { EventEmitter } from "events";
+
+interface DaikinCloudDeviceEvents {
+    "updated": [];
+}
 
 /**
  * Class to represent and control one Daikin Cloud Device
  */
-export class DaikinCloudDevice {
+export class DaikinCloudDevice extends EventEmitter<DaikinCloudDeviceEvents> {
     #client: OnectaClient;
     desc: any;
     managementPoints: Record<string, any>;
@@ -15,6 +20,7 @@ export class DaikinCloudDevice {
      * @param client Instance of DaikinCloud used for communication
      */
     constructor(deviceDescription: any, client: OnectaClient) {
+        super();
         this.managementPoints = {};
         this.#client = client;
         this.setDescription(deviceDescription);
@@ -80,6 +86,7 @@ export class DaikinCloudDevice {
             this.managementPoints[mp.embeddedId] = dataPoints;
         });
         //console.log('RES: ' + JSON.stringify(this.managementPoints));
+        this.emit('updated');
     }
 
     /**

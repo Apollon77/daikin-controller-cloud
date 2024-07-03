@@ -15,6 +15,7 @@ interface DaikinCloudControllerEvents {
  */
 export class DaikinCloudController extends EventEmitter<DaikinCloudControllerEvents> {
     #client: OnectaClient;
+    #devices = new Map<string, DaikinCloudDevice>();
 
     constructor(config: OnectaClientConfig) {
         super();
@@ -41,7 +42,20 @@ export class DaikinCloudController extends EventEmitter<DaikinCloudControllerEve
      * Get array of DaikinCloudDevice objects to interact with the device and get data
      */
     async getCloudDevices(): Promise<DaikinCloudDevice[]> {
-        const devices = await this.getCloudDeviceDetails();
-        return devices.map(dev => new DaikinCloudDevice(dev, this.#client));
+        await this.updateAllDeviceData();
+        return Array.from(this.#devices.values());
+    }
+
+    async updateAllDeviceData() {
+        const data = await this.getCloudDeviceDetails();
+        data.forEach(d => {
+            const device = this.#devices.get(d.id);
+            if (device) {
+                device.setDescription(d);
+            } else {
+                const newDevice = new DaikinCloudDevice(d, this.#client);
+                this.#devices.set(newDevice.getId(), newDevice);
+            }
+        });
     }
 }

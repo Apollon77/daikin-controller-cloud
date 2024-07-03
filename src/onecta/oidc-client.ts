@@ -65,7 +65,7 @@ export class OnectaClient {
             grant_type: 'refresh_token',
             client_id: this.#config.oidcClientId,
             client_secret: this.#config.oidcClientSecret,
-            refreshToken,
+            refresh_token: refreshToken,
         });
     }
 

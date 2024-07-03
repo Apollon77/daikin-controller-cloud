@@ -1,6 +1,6 @@
 {
   "name": "daikin-controller-cloud",
-  "version": "2.0.0-alpha.0",
+  "version": "2.0.0-alpha.1",
   "description": "Interact with Daikin Cloud devices and retrieve Tokens",
   "author": "Apollon77 <iobroker@fischer-ka.de>",
   "contributors": [],
@@ -26,7 +26,7 @@
     "url": "https://github.com/Apollon77/daikin-controller-cloud/issues"
   },
   "scripts": {
-    "prepare": "npm run build",
+    "prepublish": "npm run build",
     "build": "tsc -p .",
     "release": "release-script",
     "build-tokensaver": "pkg example/tokensaver.js"

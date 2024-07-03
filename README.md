@@ -74,11 +74,12 @@ See [`src/example.ts`](./src/example.ts).
 * Implement interval data update in library or only from outside?
 
 ## Changelog:
-
-### __WORK IN PROGRESS__
+### 2.0.0-alpha.1 (2024-07-02)
 * BREAKING: Username/Passwort and Proxy Authentications are removed and replaced by the new Daikin Portal Authentication! You need to re-authenticate!
+* BREAKING: DaikinCloudController class constructor changed and has new options structure!
 * (jacoscaz) Port to Typescript
 * (jacoscaz) Switch to Daikin's OIDC-based Onecta API
+* (Apollon77) Enhancements to restore some make sure former functionality is still possible to use
 
 ### 1.2.4 (2023-09-09)
 * (Apollon77) Make sure to store only existing refresh tokens

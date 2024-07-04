@@ -4,7 +4,6 @@ import { readFile, writeFile } from 'node:fs/promises';
 import { EventEmitter } from 'node:events';
 import { randomBytes } from 'node:crypto';
 import { BaseClient, TokenSet } from 'openid-client';
-
 import {
     OnectaOIDCScope,
     OnectaAPIBaseUrl,
@@ -14,10 +13,8 @@ import {
     maybeParseInt,
     RESOLVED,
 } from './oidc-utils.js';
-
-import {
-    startOnectaOIDCCallbackServer,
-} from './oidc-callback-server.js';
+import { startOnectaOIDCCallbackServer } from './oidc-callback-server.js';
+import { RateLimitedError } from "../index";
 
 export class OnectaClient {
     #config: OnectaClientConfig;
@@ -136,10 +133,10 @@ export class OnectaClient {
     #getRateLimitStatus(res: IncomingMessage): OnectaRateLimitStatus {
         // See "Rate limitation" at https://developer.cloud.daikineurope.com/docs/b0dffcaa-7b51-428a-bdff-a7c8a64195c0/general_api_guidelines
         return {
-            limitDay: maybeParseInt(res.headers['x-ratelimit-limit-minute']),
-            remainingDay: maybeParseInt(res.headers['x-ratelimit-remaining-minute']),
-            limitMinute: maybeParseInt(res.headers['x-ratelimit-limit-day']),
-            remainingMinute: maybeParseInt(res.headers['x-ratelimit-remaining-day']),
+            limitMinute: maybeParseInt(res.headers['x-ratelimit-limit-minute']),
+            remainingMinute: maybeParseInt(res.headers['x-ratelimit-remaining-minute']),
+            limitDay: maybeParseInt(res.headers['x-ratelimit-limit-day']),
+            remainingDay: maybeParseInt(res.headers['x-ratelimit-remaining-day']),
         };
     }
 
@@ -147,7 +144,7 @@ export class OnectaClient {
         const tokenSet = await this.#getTokenSetQueued();
         const url = `${OnectaAPIBaseUrl.prod}${path}`;
         const res = await this.#client.requestResource(url, tokenSet, opts);
-        RESOLVED.then(() => this.#emitter.emit('rate_limit', this.#getRateLimitStatus(res)));
+        RESOLVED.then(() => this.#emitter.emit('rate_limit_status', this.#getRateLimitStatus(res)));
         switch (res.statusCode) {
             case 200:
                 return res.body ? JSON.parse(res.body.toString()) :  null;
@@ -156,7 +153,7 @@ export class OnectaClient {
             case 429: {
                 // See "Rate limitation" at https://developer.cloud.daikineurope.com/docs/b0dffcaa-7b51-428a-bdff-a7c8a64195c0/general_api_guidelines
                 const retryAfter = res.headers['retry-after'];
-                throw new Error(`API request rate-limited, retry after ${retryAfter} seconds`);
+                throw new RateLimitedError(`API request rate-limited, retry after ${retryAfter} seconds`);
             }
             case 500:
             default:

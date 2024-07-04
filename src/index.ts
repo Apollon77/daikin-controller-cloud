@@ -8,8 +8,10 @@ interface DaikinCloudControllerEvents {
     "error": [err: Error];
     "authorization_request": [url: string];
     "token_update": [tokenSet: TokenSet];
-    "rate_limit": [OnectaRateLimitStatus];
+    "rate_limit_status": [OnectaRateLimitStatus];
 }
+
+export class RateLimitedError extends Error {}
 
 /**
  * Daikin Controller for Cloud solution to get tokens and interact with devices
@@ -49,6 +51,9 @@ export class DaikinCloudController extends EventEmitter<DaikinCloudControllerEve
 
     async updateAllDeviceData() {
         const data = await this.getCloudDeviceDetails();
+        if (!Array.isArray(data)) {
+            throw new Error('Invalid data received from cloud');
+        }
         data.forEach(d => {
             const device = this.#devices.get(d.id);
             if (device) {

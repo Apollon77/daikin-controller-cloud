@@ -74,7 +74,7 @@ See [`src/example.ts`](./src/example.ts).
 * Implement interval data update in library or only from outside?
 
 ## Changelog:
-### 2.0.0-alpha.4 (2024-07-03)
+### __WORK IN PROGRESS__
 * BREAKING: Username/Passwort and Proxy Authentications are removed and replaced by the new Daikin Portal Authentication! You need to re-authenticate!
 * BREAKING: DaikinCloudController class constructor changed and has new options structure!
 * (jacoscaz) Ports to Typescript
@@ -82,6 +82,7 @@ See [`src/example.ts`](./src/example.ts).
 * (Apollon77) Enhancements to restore some make sure former functionality is still possible to use
 * (Apollon77) Enhances DaikinCloudController class to update data for all devices with one call to save requests
 * (Apollon77) Enhances DaikinDevice classes to emit an "updated" event when data is updated, so it's easier to listen for changes
+* (jacoscaz/Apollon77) Expose rate limit information and own error class for rate limit handling
 
 ### 1.2.4 (2023-09-09)
 * (Apollon77) Make sure to store only existing refresh tokens

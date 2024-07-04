@@ -147,9 +147,16 @@ export class OnectaClient {
         RESOLVED.then(() => this.#emitter.emit('rate_limit_status', this.#getRateLimitStatus(res)));
         switch (res.statusCode) {
             case 200:
+            case 204:
                 return res.body ? JSON.parse(res.body.toString()) :  null;
             case 400:
-                throw new Error(`Bad API request: ${JSON.parse(res.body!.toString()).message}`);
+                throw new Error(`Bad Request (400): ${res.body ? res.body.toString() : 'No body response from the API'}`);
+            case 404:
+                throw new Error(`Not Found (404): ${res.body ? res.body.toString() : 'No body response from the API'}`);
+            case 409:
+                throw new Error(`Conflict (409): ${res.body ? res.body.toString() : 'No body response from the API'}`);
+            case 422:
+                throw new Error(`Unprocessable Entity (422): ${res.body ? res.body.toString() : 'No body response from the API'}`);
             case 429: {
                 // See "Rate limitation" at https://developer.cloud.daikineurope.com/docs/b0dffcaa-7b51-428a-bdff-a7c8a64195c0/general_api_guidelines
                 const retryAfter = res.headers['retry-after'];

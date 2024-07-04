@@ -1,13 +1,14 @@
 import { EventEmitter } from 'events';
 import { DaikinCloudDevice } from './device.js';
 import { OnectaClient } from './onecta/oidc-client.js';
-import { OnectaClientConfig } from './onecta/oidc-utils.js';
+import { OnectaClientConfig, OnectaRateLimitStatus } from './onecta/oidc-utils.js';
 import { TokenSet } from "openid-client";
 
 interface DaikinCloudControllerEvents {
     "error": [err: Error];
     "authorization_request": [url: string];
     "token_update": [tokenSet: TokenSet];
+    "rate_limit": [OnectaRateLimitStatus];
 }
 
 /**

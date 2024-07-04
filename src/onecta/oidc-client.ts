@@ -1,4 +1,5 @@
 
+import { IncomingMessage } from 'node:http';
 import { readFile, writeFile } from 'node:fs/promises';
 import { EventEmitter } from 'node:events';
 import { randomBytes } from 'node:crypto';
@@ -9,6 +10,9 @@ import {
     OnectaAPIBaseUrl,
     OnectaClientConfig,
     onecta_oidc_issuer,
+    OnectaRateLimitStatus,
+    maybeParseInt,
+    RESOLVED,
 } from './oidc-utils.js';
 
 import {
@@ -129,14 +133,35 @@ export class OnectaClient {
         });
     }
 
+    #getRateLimitStatus(res: IncomingMessage): OnectaRateLimitStatus {
+        // See "Rate limitation" at https://developer.cloud.daikineurope.com/docs/b0dffcaa-7b51-428a-bdff-a7c8a64195c0/general_api_guidelines
+        return {
+            limitDay: maybeParseInt(res.headers['x-ratelimit-limit-minute']),
+            remainingDay: maybeParseInt(res.headers['x-ratelimit-remaining-minute']),
+            limitMinute: maybeParseInt(res.headers['x-ratelimit-limit-day']),
+            remainingMinute: maybeParseInt(res.headers['x-ratelimit-remaining-day']),
+        };
+    }
+
     async requestResource(path: string, opts?: Parameters<typeof BaseClient.prototype.requestResource>[2]): Promise<any> {
         const tokenSet = await this.#getTokenSetQueued();
         const url = `${OnectaAPIBaseUrl.prod}${path}`;
         const res = await this.#client.requestResource(url, tokenSet, opts);
-        if (res.body) {
-            return JSON.parse(res.body.toString());
+        RESOLVED.then(() => this.#emitter.emit('rate_limit', this.#getRateLimitStatus(res)));
+        switch (res.statusCode) {
+            case 200:
+                return res.body ? JSON.parse(res.body.toString()) :  null;
+            case 400:
+                throw new Error(`Bad API request: ${JSON.parse(res.body!.toString()).message}`);
+            case 429: {
+                // See "Rate limitation" at https://developer.cloud.daikineurope.com/docs/b0dffcaa-7b51-428a-bdff-a7c8a64195c0/general_api_guidelines
+                const retryAfter = res.headers['retry-after'];
+                throw new Error(`API request rate-limited, retry after ${retryAfter} seconds`);
+            }
+            case 500:
+            default:
+                throw new Error(`Unexpected API error`);
         }
-        return null;
     }
 
 }

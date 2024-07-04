@@ -41,8 +41,8 @@ export interface OnectaClientConfig {
     oidcClientSecret: string;
     oidcCallbackServerExternalAddress?: string;
     oidcCallbackServerBaseUrl?: string;
-    oidcCallbackServerPort: number;
-    oidcCallbackServerBindAddr: string;
+    oidcCallbackServerPort?: number;
+    oidcCallbackServerBindAddr?: string;
     oidcAuthorizationTimeoutS: number;
     oidcTokenSetFilePath?: string;
     certificatePathCert?: string;
@@ -51,3 +51,16 @@ export interface OnectaClientConfig {
     customOidcCodeReceiver?: (auth_url: string, state: string) => Promise<string>;
     tokenSet?: TokenSet;
 }
+
+export interface OnectaRateLimitStatus {
+    limitMinute?: number;
+    remainingMinute?: number;
+    limitDay?: number;
+    remainingDay?: number;
+}
+
+export const maybeParseInt = (v: any) => {
+    return typeof v === 'string' ? parseInt(v) : undefined;
+};
+
+export const RESOLVED = Promise.resolve();

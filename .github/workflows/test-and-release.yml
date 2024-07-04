@@ -16,6 +16,11 @@ on:
       - "v?[0-9]+.[0-9]+.[0-9]+-**"
   pull_request: {}
 
+# Cancel previous PR/branch runs when a new commit is pushed
+concurrency:
+  group: ${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   # Performs quick checks before the expensive test runs
   check-and-lint:
@@ -130,33 +135,3 @@ jobs:
           # Prerelease versions create prereleases on Github
           prerelease: ${{ contains(steps.extract_release.outputs.VERSION, '-') }}
           body: ${{ steps.extract_release.outputs.BODY }}
-      - name: Upload Tokensaver binary Windows
-        id: upload-release-asset-windows
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./tokensaver-win.exe
-          asset_name: tokensaver-win.exe
-          asset_content_type: application/vnd.microsoft.portable-executable
-      - name: Upload Tokensaver binary MacOS
-        id: upload-release-asset-macos
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./tokensaver-macos
-          asset_name: tokensaver-macos
-          asset_content_type: application/mac-binhex40
-      - name: Upload Tokensaver binary Linux
-        id: upload-release-asset-Linux
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./tokensaver-linux
-          asset_name: tokensaver-linux
-          asset_content_type: application/x-executable

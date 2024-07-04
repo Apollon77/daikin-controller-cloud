@@ -1,6 +1,6 @@
 {
   "name": "daikin-controller-cloud",
-  "version": "2.0.0-alpha.1",
+  "version": "2.0.0-alpha.7",
   "description": "Interact with Daikin Cloud devices and retrieve Tokens",
   "author": "Apollon77 <iobroker@fischer-ka.de>",
   "contributors": [],

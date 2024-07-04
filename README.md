@@ -69,12 +69,9 @@ See [`src/example.ts`](./src/example.ts).
 ## Todos
 * Mooooaaar documentation
 * Add Tests
-* Implement internal update of values when a new value is set? Or reload data
-  after a set action automatically?
-* Implement interval data update in library or only from outside?
-
+* 
 ## Changelog:
-### 2.0.0-alpha.7 (2024-07-04)
+### __WORK IN PROGRESS__
 * BREAKING: Username/Passwort and Proxy Authentications are removed and replaced by the new Daikin Portal Authentication! You need to re-authenticate!
 * BREAKING: DaikinCloudController class constructor changed and has new options structure!
 * (jacoscaz) Ports to Typescript

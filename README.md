@@ -71,7 +71,7 @@ See [`src/example.ts`](./src/example.ts).
 * Add Tests
 * 
 ## Changelog:
-### __WORK IN PROGRESS__
+### 2.0.0-alpha.9 (2024-07-04)
 * BREAKING: Username/Passwort and Proxy Authentications are removed and replaced by the new Daikin Portal Authentication! You need to re-authenticate!
 * BREAKING: DaikinCloudController class constructor changed and has new options structure!
 * Minimum Node.js version is 18.2

@@ -62,7 +62,7 @@ Afterwards you are redirected to Daikin to approve the access and then redirecte
 // limiting.
 // ============================================================================
 
-controller.on('rate_limit', (rateLimitStatus) => {
+controller.on('rate_limit_status', (rateLimitStatus) => {
     console.log(rateLimitStatus);
 });
 

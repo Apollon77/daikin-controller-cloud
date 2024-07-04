@@ -71,9 +71,10 @@ See [`src/example.ts`](./src/example.ts).
 * Add Tests
 * 
 ## Changelog:
-### 2.0.0-alpha.8 (2024-07-04)
+### __WORK IN PROGRESS__
 * BREAKING: Username/Passwort and Proxy Authentications are removed and replaced by the new Daikin Portal Authentication! You need to re-authenticate!
 * BREAKING: DaikinCloudController class constructor changed and has new options structure!
+* Minimum Node.js version is 18.2
 * (jacoscaz) Ports to Typescript
 * (jacoscaz) Switches to Daikin's OIDC-based Onecta API
 * (Apollon77) Enhancements to restore some make sure former functionality is still possible to use

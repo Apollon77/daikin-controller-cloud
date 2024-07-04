@@ -9,6 +9,9 @@
   "keywords": [
     "daikin"
   ],
+  "engines": {
+    "node": ">=18.2"
+  },
   "dependencies": {
     "openid-client": "^5.6.5"
   },

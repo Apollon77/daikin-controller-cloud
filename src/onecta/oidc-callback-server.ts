@@ -13,6 +13,9 @@ export type OnectaOIDCCallbackServerRequestListener<
  * Creates and starts a HTTPS server
  */
 export const startOnectaOIDCCallbackServer = async (config: OnectaClientConfig, oidc_state: string, auth_url: string): Promise<string> => {
+    if (!config.oidcCallbackServerPort || !config.oidcCallbackServerBindAddr) {
+        throw new Error('oidcCallbackServerPort and oidcCallbackServerBindAddr must be set when using the server');
+    }
     const server = createServer({
         key: await readFile(config.certificatePathKey ?? resolve(__dirname, '..', '..', 'cert', 'cert.key')),
         cert: await readFile(config.certificatePathCert ?? resolve(__dirname, '..', '..', 'cert', 'cert.pem')),

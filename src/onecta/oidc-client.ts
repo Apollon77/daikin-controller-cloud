@@ -160,7 +160,7 @@ export class OnectaClient {
             case 429: {
                 // See "Rate limitation" at https://developer.cloud.daikineurope.com/docs/b0dffcaa-7b51-428a-bdff-a7c8a64195c0/general_api_guidelines
                 const retryAfter = res.headers['retry-after'];
-                throw new RateLimitedError(`API request rate-limited, retry after ${retryAfter} seconds`);
+                throw new RateLimitedError(`API request rate-limited, retry after ${retryAfter} seconds`, retryAfter);
             }
             case 500:
             default:

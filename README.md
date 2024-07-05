@@ -96,7 +96,7 @@ See [`src/example.ts`](./src/example.ts).
 * Add Tests
 
 ## Changelog:
-### __WORK IN PROGRESS__
+### 2.1.0 (2024-07-05)
 * Expose the Rate limit error retryAfter time in the error object
 
 ### 2.0.0 (2024-07-05)

@@ -159,7 +159,7 @@ export class OnectaClient {
                 throw new Error(`Unprocessable Entity (422): ${res.body ? res.body.toString() : 'No body response from the API'}`);
             case 429: {
                 // See "Rate limitation" at https://developer.cloud.daikineurope.com/docs/b0dffcaa-7b51-428a-bdff-a7c8a64195c0/general_api_guidelines
-                const retryAfter = res.headers['retry-after'];
+                const retryAfter = maybeParseInt(res.headers['retry-after']);
                 throw new RateLimitedError(`API request rate-limited, retry after ${retryAfter} seconds`, retryAfter);
             }
             case 500:

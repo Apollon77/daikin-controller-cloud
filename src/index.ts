@@ -12,7 +12,7 @@ interface DaikinCloudControllerEvents {
 }
 
 export class RateLimitedError extends Error {
-    constructor(message: string, public retryAfter: number) {
+    constructor(message: string, public retryAfter?: number) {
         super(message);
     }
 }

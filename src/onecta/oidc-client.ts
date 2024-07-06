@@ -152,11 +152,13 @@ export class OnectaClient {
     async requestResource(path: string, opts?: RequestParameters): Promise<any> {
         if (!opts?.ignoreRateLimit && this.#blockedUntil > Date.now()) {
             const retryAfter = Math.ceil((this.#blockedUntil - Date.now()) / 1000);
-            throw new RateLimitedError(`API request rate-limited, retry after ${retryAfter} seconds`, retryAfter);
+            throw new RateLimitedError(`API request still rate-limited, retry after ${retryAfter} seconds`, retryAfter);
         }
+        const reqOpts = { ...opts };
+        delete reqOpts.ignoreRateLimit;
         const tokenSet = await this.#getTokenSetQueued();
         const url = `${OnectaAPIBaseUrl.prod}${path}`;
-        const res = await this.#client.requestResource(url, tokenSet, opts);
+        const res = await this.#client.requestResource(url, tokenSet, reqOpts);
         RESOLVED.then(() => this.#emitter.emit('rate_limit_status', this.#getRateLimitStatus(res)));
         switch (res.statusCode) {
             case 200:

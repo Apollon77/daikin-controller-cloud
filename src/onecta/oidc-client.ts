@@ -16,12 +16,17 @@ import {
 import { startOnectaOIDCCallbackServer } from './oidc-callback-server.js';
 import { RateLimitedError } from "../index";
 
+type RequestParameters = Parameters<typeof BaseClient.prototype.requestResource>[2] & {
+    ignoreRateLimit?: boolean;
+}
+
 export class OnectaClient {
     #config: OnectaClientConfig;
     #client: BaseClient;
     #tokenSet: TokenSet | null;
     #emitter: EventEmitter;
     #getTokenSetQueue: { resolve: (set: TokenSet) => any, reject: (err: Error) => any }[];
+    #blockedUntil: number = 0;
 
     constructor(config: OnectaClientConfig, emitter: EventEmitter) {
         this.#config = config;
@@ -37,6 +42,10 @@ export class OnectaClient {
                 `https://${config.oidcCallbackServerExternalAddress ?? 
                     config.oidcCallbackServerBindAddr}:${config.oidcCallbackServerPort}`;
         }
+    }
+
+    get blockedUntil(): number {
+        return this.#blockedUntil;
     }
 
     async #authorize(): Promise<TokenSet> {
@@ -140,7 +149,11 @@ export class OnectaClient {
         };
     }
 
-    async requestResource(path: string, opts?: Parameters<typeof BaseClient.prototype.requestResource>[2]): Promise<any> {
+    async requestResource(path: string, opts?: RequestParameters): Promise<any> {
+        if (!opts?.ignoreRateLimit && this.#blockedUntil > Date.now()) {
+            const retryAfter = Math.ceil((this.#blockedUntil - Date.now()) / 1000);
+            throw new RateLimitedError(`API request rate-limited, retry after ${retryAfter} seconds`, retryAfter);
+        }
         const tokenSet = await this.#getTokenSetQueued();
         const url = `${OnectaAPIBaseUrl.prod}${path}`;
         const res = await this.#client.requestResource(url, tokenSet, opts);
@@ -160,6 +173,9 @@ export class OnectaClient {
             case 429: {
                 // See "Rate limitation" at https://developer.cloud.daikineurope.com/docs/b0dffcaa-7b51-428a-bdff-a7c8a64195c0/general_api_guidelines
                 const retryAfter = maybeParseInt(res.headers['retry-after']);
+                if (retryAfter !== undefined) {
+                    this.#blockedUntil = Date.now() + retryAfter * 1000;
+                }
                 throw new RateLimitedError(`API request rate-limited, retry after ${retryAfter} seconds`, retryAfter);
             }
             case 500:

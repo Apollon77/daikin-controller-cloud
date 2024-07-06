@@ -29,6 +29,7 @@ used by the Daikin Controller App please use the
 The Onecta API limits each client application to 200 requests per day. Please make sure to not exceed this limit, as the API will block further requests for the day.
 
 Because of this we propose the following usage limits to be implemented by the applications using this library:
+* DO NOT generate more requests while being rate limited because else the unblock time increases! Use the `retryAfter` property of the RateLimitError to determine how long to wait for the next request.
 * Better always read the full device details rather than single devices to make best use of the rate limit
 * A default polling interval of 15 minutes should be sufficient for most use cases while leaving some space for controlling the devices too.
 * Consider using a (longer) slow polling interval for timeframes where updated data are not that important - with this the normal polling interval could be faster.

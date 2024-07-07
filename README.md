@@ -97,6 +97,9 @@ See [`src/example.ts`](./src/example.ts).
 * Add Tests
 
 ## Changelog:
+### __WORK IN PROGRESS__
+* Block communication in client class when rate limited according to Daikin response
+
 ### 2.1.1 (2024-07-05)
 * Expose the Rate limit error retryAfter time in the error object
 

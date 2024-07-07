@@ -97,7 +97,7 @@ See [`src/example.ts`](./src/example.ts).
 * Add Tests
 
 ## Changelog:
-### __WORK IN PROGRESS__
+### 2.2.0 (2024-07-07)
 * Block communication in client class when rate limited according to Daikin response
 
 ### 2.1.1 (2024-07-05)

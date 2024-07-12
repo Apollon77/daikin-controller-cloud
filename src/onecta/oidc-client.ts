@@ -182,7 +182,7 @@ export class OnectaClient {
                     blockedFor = retryAfter > ONE_DAY_S ? ONE_DAY_S : retryAfter;
                     this.#blockedUntil = Date.now() + blockedFor * 1000;
                 }
-                throw new RateLimitedError(`API request rate-limited, retry after ${retryAfter} seconds. API requests blocked for ${blockedFor} seconds`, retryAfter);
+                throw new RateLimitedError(`API request rate-limited, retry after ${retryAfter} seconds. API requests blocked for ${blockedFor} seconds`, blockedFor);
             }
             case 500:
             default:

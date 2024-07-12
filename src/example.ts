@@ -26,11 +26,11 @@ const controller = new DaikinCloudController({
     /* OIDC client secret */
     oidcClientSecret: oidc_client_secret,
     /* Network interface that the HTTP server should bind to. Bind to all interfaces for convenience, please limit as needed to single interfaces! */
-    oidcCallbackServerBindAddr: '0.0.0.0',
+    // oidcCallbackServerBindAddr: '0.0.0.0',
     /* port that the HTTP server should bind to */
-    oidcCallbackServerPort: 8765,
+    // oidcCallbackServerPort: 8765,
     /* OIDC Redirect URI */
-    oidcCallbackServerExternalAddress: 'daikin.local',
+    // oidcCallbackServerExternalAddress: 'daikin.local',
     //oidcCallbackServerBaseUrl: 'https://daikin.local:8765', // or use local IP address where server is reachable
     /* path of file used to cache the OIDC tokenset */
     oidcTokenSetFilePath: resolve(homedir(), '.daikin-controller-cloud-tokenset'),

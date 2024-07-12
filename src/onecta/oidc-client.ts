@@ -13,7 +13,7 @@ import {
     maybeParseInt,
     RESOLVED,
 } from './oidc-utils.js';
-import { startOnectaOIDCCallbackServer } from './oidc-callback-server.js';
+import { OnectaOIDCCallbackServer } from './oidc-callback-server.js';
 import { RateLimitedError } from "../index";
 
 type RequestParameters = Parameters<typeof BaseClient.prototype.requestResource>[2] & {
@@ -21,6 +21,7 @@ type RequestParameters = Parameters<typeof BaseClient.prototype.requestResource>
 }
 
 export class OnectaClient {
+    
     #config: OnectaClientConfig;
     #client: BaseClient;
     #tokenSet: TokenSet | null;
@@ -37,30 +38,43 @@ export class OnectaClient {
         });
         this.#tokenSet = config.tokenSet ? new TokenSet(config.tokenSet) : null;
         this.#getTokenSetQueue = [];
-        if (!config.oidcCallbackServerBaseUrl) {
-            config.oidcCallbackServerBaseUrl =
-                `https://${config.oidcCallbackServerExternalAddress ?? 
-                    config.oidcCallbackServerBindAddr}:${config.oidcCallbackServerPort}`;
-        }
     }
 
     get blockedUntil(): number {
         return this.#blockedUntil;
     }
 
-    async #authorize(): Promise<TokenSet> {
-        const redirectUri = this.#config.oidcCallbackServerBaseUrl;
-        const reqState = randomBytes(32).toString('hex');
+    async #getAuthCodeWithCustomReceiver(): Promise<{ authCode: string, redirectUri: string }> {
+        const { customOidcCodeReceiver: receiver, oidcCallbackServerBaseUrl: redirectUri } = this.#config;
+        if (!receiver || !redirectUri) {
+            throw new Error('Config params "customOidcCodeReceiver" and "oidcCallbackServerBaseUrl" are both required when using a custom OIDC authorization grant receiver');
+        }
+        const reqState = randomBytes(32).toString('hex');    
         const authUrl = this.#client.authorizationUrl({
             scope: OnectaOIDCScope.basic,
             state: reqState,
             redirect_uri: redirectUri,
         });
-        this.#emitter.emit('authorization_request', this.#config.oidcCallbackServerBaseUrl);
-        const authCode =
-            this.#config.customOidcCodeReceiver
-                ? await this.#config.customOidcCodeReceiver(authUrl, reqState)
-                : await startOnectaOIDCCallbackServer(this.#config, reqState, authUrl);
+        return { authCode: await receiver(authUrl, reqState), redirectUri };
+    }
+
+    async #getAuthCodeWithServer(): Promise<{ authCode: string, redirectUri: string }> {
+        const reqState = randomBytes(32).toString('hex');
+        const server = new OnectaOIDCCallbackServer(this.#config);
+        const redirectUri = await server.listen();
+        const authUrl = this.#client.authorizationUrl({
+            scope: OnectaOIDCScope.basic,
+            state: reqState,
+            redirect_uri: redirectUri,
+        });
+        this.#emitter.emit('authorization_request', redirectUri);
+        return { authCode: await server.waitForAuthCodeAndClose(reqState, authUrl), redirectUri };
+    }
+
+    async #authorize(): Promise<TokenSet> {
+        const config = this.#config;
+        const { authCode, redirectUri } = config.customOidcCodeReceiver 
+            ? await this.#getAuthCodeWithCustomReceiver() : await this.#getAuthCodeWithServer();
         return await this.#client.grant({
             grant_type: 'authorization_code',
             client_id: this.#config.oidcClientId,

@@ -97,7 +97,7 @@ See [`src/example.ts`](./src/example.ts).
 * Add Tests
 
 ## Changelog:
-### __WORK IN PROGRESS__
+### 2.3.0 (2024-07-12)
 * (Apollon77) Block API request maximum for 24h and then check again
 * (jacoscaz) Bind to 0.0.0.0 by default and select port automatically if not provided
 

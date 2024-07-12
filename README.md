@@ -97,11 +97,14 @@ See [`src/example.ts`](./src/example.ts).
 * Add Tests
 
 ## Changelog:
+### __WORK IN PROGRESS__
+* (Apollon77) Block API request maximum for 24h and then check again
+
 ### 2.2.0 (2024-07-07)
-* Block communication in client class when rate limited according to Daikin response
+* (Apollon77) Block communication in client class when rate limited according to Daikin response
 
 ### 2.1.1 (2024-07-05)
-* Expose the Rate limit error retryAfter time in the error object
+* (Apollon77) Expose the Rate limit error retryAfter time in the error object
 
 ### 2.0.0 (2024-07-05)
 * BREAKING: Username/Passwort and Proxy Authentications are removed and replaced by the new Daikin Portal Authentication! You need to re-authenticate!

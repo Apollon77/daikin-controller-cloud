@@ -177,15 +177,16 @@ export class DaikinCloudDevice extends EventEmitter<DaikinCloudDeviceEvents> {
      *
      * @param {object} def  Datapoint definition/meta data to verify
      * @param {any} value Value to be set
+     * @param {boolean} [ignoreWritableCheck=false] Ignore the writable check
      * @throws Error
      * @private
      */
-    #validateData(def: any, value: any) {
+    #validateData(def: any, value: any, ignoreWritableCheck = false) {
         if (!def.hasOwnProperty('value') && !def.hasOwnProperty('settable')) {
             throw new Error('Value can not be set without dataPointPath');
         }
 
-        if (!def.hasOwnProperty('settable') || !def.settable) {
+        if (!ignoreWritableCheck && (!def.hasOwnProperty('settable') || !def.settable)) {
             throw new Error('Value is not writable');
         }
         if (def.hasOwnProperty('value') && typeof def.value !== typeof value) {
@@ -218,9 +219,10 @@ export class DaikinCloudDevice extends EventEmitter<DaikinCloudDeviceEvents> {
      * @param {string} dataPoint Datapoint name for management point
      * @param {string} [dataPointPath] further detailed datapoints with subpath data, if needed
      * @param {number|string} value Value to set
+     * @param {boolean} [ignoreWritableCheck=false] Ignore the writable check
      * @returns {Promise<Object|boolean>} should return a true - or if a body is returned teh body object (can this happen?)
      */
-    async setData(managementPoint: any, dataPoint: any, dataPointPath: any, value: any) {
+    async setData(managementPoint: any, dataPoint: any, dataPointPath: any, value: any, ignoreWritableCheck = false) {
         if (value === undefined) {
             value = dataPointPath;
             dataPointPath = undefined;
@@ -231,7 +233,7 @@ export class DaikinCloudDevice extends EventEmitter<DaikinCloudDeviceEvents> {
         }
 
         const dataPointDef = dataPointPath ? this.managementPoints[managementPoint][dataPoint][dataPointPath] : this.managementPoints[managementPoint][dataPoint];
-        this.#validateData(dataPointDef, value);
+        this.#validateData(dataPointDef, value, ignoreWritableCheck);
 
         const setPath =  '/v1/gateway-devices/' + this.getId() + '/management-points/' + managementPoint + '/characteristics/' + dataPoint;
         const setBody = {

@@ -13,15 +13,23 @@ import {
     maybeParseInt,
     RESOLVED,
 } from './oidc-utils.js';
-import { startOnectaOIDCCallbackServer } from './oidc-callback-server.js';
+import { OnectaOIDCCallbackServer } from './oidc-callback-server.js';
 import { RateLimitedError } from "../index";
 
+type RequestParameters = Parameters<typeof BaseClient.prototype.requestResource>[2] & {
+    ignoreRateLimit?: boolean;
+}
+
+const ONE_DAY_S = 24 * 60 * 60;
+
 export class OnectaClient {
+    
     #config: OnectaClientConfig;
     #client: BaseClient;
     #tokenSet: TokenSet | null;
     #emitter: EventEmitter;
     #getTokenSetQueue: { resolve: (set: TokenSet) => any, reject: (err: Error) => any }[];
+    #blockedUntil: number = 0;
 
     constructor(config: OnectaClientConfig, emitter: EventEmitter) {
         this.#config = config;
@@ -32,26 +40,43 @@ export class OnectaClient {
         });
         this.#tokenSet = config.tokenSet ? new TokenSet(config.tokenSet) : null;
         this.#getTokenSetQueue = [];
-        if (!config.oidcCallbackServerBaseUrl) {
-            config.oidcCallbackServerBaseUrl =
-                `https://${config.oidcCallbackServerExternalAddress ?? 
-                    config.oidcCallbackServerBindAddr}:${config.oidcCallbackServerPort}`;
-        }
     }
 
-    async #authorize(): Promise<TokenSet> {
-        const redirectUri = this.#config.oidcCallbackServerBaseUrl;
-        const reqState = randomBytes(32).toString('hex');
+    get blockedUntil(): number {
+        return this.#blockedUntil;
+    }
+
+    async #getAuthCodeWithCustomReceiver(): Promise<{ authCode: string, redirectUri: string }> {
+        const { customOidcCodeReceiver: receiver, oidcCallbackServerBaseUrl: redirectUri } = this.#config;
+        if (!receiver || !redirectUri) {
+            throw new Error('Config params "customOidcCodeReceiver" and "oidcCallbackServerBaseUrl" are both required when using a custom OIDC authorization grant receiver');
+        }
+        const reqState = randomBytes(32).toString('hex');    
         const authUrl = this.#client.authorizationUrl({
             scope: OnectaOIDCScope.basic,
             state: reqState,
             redirect_uri: redirectUri,
         });
-        this.#emitter.emit('authorization_request', this.#config.oidcCallbackServerBaseUrl);
-        const authCode =
-            this.#config.customOidcCodeReceiver
-                ? await this.#config.customOidcCodeReceiver(authUrl, reqState)
-                : await startOnectaOIDCCallbackServer(this.#config, reqState, authUrl);
+        return { authCode: await receiver(authUrl, reqState), redirectUri };
+    }
+
+    async #getAuthCodeWithServer(): Promise<{ authCode: string, redirectUri: string }> {
+        const reqState = randomBytes(32).toString('hex');
+        const server = new OnectaOIDCCallbackServer(this.#config);
+        const redirectUri = await server.listen();
+        const authUrl = this.#client.authorizationUrl({
+            scope: OnectaOIDCScope.basic,
+            state: reqState,
+            redirect_uri: redirectUri,
+        });
+        this.#emitter.emit('authorization_request', redirectUri);
+        return { authCode: await server.waitForAuthCodeAndClose(reqState, authUrl), redirectUri };
+    }
+
+    async #authorize(): Promise<TokenSet> {
+        const config = this.#config;
+        const { authCode, redirectUri } = config.customOidcCodeReceiver 
+            ? await this.#getAuthCodeWithCustomReceiver() : await this.#getAuthCodeWithServer();
         return await this.#client.grant({
             grant_type: 'authorization_code',
             client_id: this.#config.oidcClientId,
@@ -140,20 +165,38 @@ export class OnectaClient {
         };
     }
 
-    async requestResource(path: string, opts?: Parameters<typeof BaseClient.prototype.requestResource>[2]): Promise<any> {
+    async requestResource(path: string, opts?: RequestParameters): Promise<any> {
+        if (!opts?.ignoreRateLimit && this.#blockedUntil > Date.now()) {
+            const retryAfter = Math.ceil((this.#blockedUntil - Date.now()) / 1000);
+            throw new RateLimitedError(`API request blocked because of rate-limits for ${retryAfter} seconds`, retryAfter);
+        }
+        const reqOpts = { ...opts };
+        delete reqOpts.ignoreRateLimit;
         const tokenSet = await this.#getTokenSetQueued();
         const url = `${OnectaAPIBaseUrl.prod}${path}`;
-        const res = await this.#client.requestResource(url, tokenSet, opts);
+        const res = await this.#client.requestResource(url, tokenSet, reqOpts);
         RESOLVED.then(() => this.#emitter.emit('rate_limit_status', this.#getRateLimitStatus(res)));
         switch (res.statusCode) {
             case 200:
+            case 204:
                 return res.body ? JSON.parse(res.body.toString()) :  null;
             case 400:
-                throw new Error(`Bad API request: ${JSON.parse(res.body!.toString()).message}`);
+                throw new Error(`Bad Request (400): ${res.body ? res.body.toString() : 'No body response from the API'}`);
+            case 404:
+                throw new Error(`Not Found (404): ${res.body ? res.body.toString() : 'No body response from the API'}`);
+            case 409:
+                throw new Error(`Conflict (409): ${res.body ? res.body.toString() : 'No body response from the API'}`);
+            case 422:
+                throw new Error(`Unprocessable Entity (422): ${res.body ? res.body.toString() : 'No body response from the API'}`);
             case 429: {
                 // See "Rate limitation" at https://developer.cloud.daikineurope.com/docs/b0dffcaa-7b51-428a-bdff-a7c8a64195c0/general_api_guidelines
-                const retryAfter = res.headers['retry-after'];
-                throw new RateLimitedError(`API request rate-limited, retry after ${retryAfter} seconds`);
+                const retryAfter = maybeParseInt(res.headers['retry-after']);
+                let blockedFor = retryAfter;
+                if (retryAfter !== undefined) {
+                    blockedFor = retryAfter > ONE_DAY_S ? ONE_DAY_S : retryAfter;
+                    this.#blockedUntil = Date.now() + blockedFor * 1000;
+                }
+                throw new RateLimitedError(`API request rate-limited, retry after ${retryAfter} seconds. API requests blocked for ${blockedFor} seconds`, blockedFor);
             }
             case 500:
             default:

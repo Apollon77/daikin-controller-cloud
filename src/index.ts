@@ -11,7 +11,11 @@ interface DaikinCloudControllerEvents {
     "rate_limit_status": [OnectaRateLimitStatus];
 }
 
-export class RateLimitedError extends Error {}
+export class RateLimitedError extends Error {
+    constructor(message: string, public retryAfter?: number) {
+        super(message);
+    }
+}
 
 /**
  * Daikin Controller for Cloud solution to get tokens and interact with devices

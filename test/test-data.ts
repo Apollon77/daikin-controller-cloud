@@ -1,4 +1,4 @@
-const stylish = {
+export const stylish = {
 	"_id": "REDACTED_ID_STYLISH_1",
 	"id": "78001793-f434-45bf-8db1-8f606aa6f844",
 	"type": "dx23",
@@ -873,7 +873,7 @@ const stylish = {
 	"timestamp": "2023-03-07T18:57:22.238Z",
 	"lastUpdateReceived": "2023-03-07T18:57:22.238Z"
 };
-const perfera = {
+export const perfera = {
 	"_id": "REDACTED_ID_PERFERA_1",
 	"type": "dx4",
 	"deviceModel": "dx4",
@@ -1783,8 +1783,7 @@ const perfera = {
 	"id": "fa8397fe-b23f-465b-b8b9-90bf15f565fa",
 	"lastUpdateReceived": "2023-03-07T19:14:40.746Z"
 };
-
-const altherma = {
+export const altherma = {
 	"_id": "REDACTED_ID_ALTHERMA_1",
 	"deviceModel": "Altherma",
 	"type": "heating-wlan",
@@ -2541,7 +2540,3 @@ const altherma = {
 	"id": "10b029e7-484c-4519-b22e-c14be4b7a71c",
 	"lastUpdateReceived": "2023-03-07T19:01:39.983Z"
 };
-
-module.exports = {
-	stylish, perfera, altherma
-}

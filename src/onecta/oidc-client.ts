@@ -12,8 +12,8 @@ import {
     OnectaRateLimitStatus,
     maybeParseInt,
     RESOLVED,
-} from './oidc-utils.js';
-import { OnectaOIDCCallbackServer } from './oidc-callback-server.js';
+} from './oidc-utils';
+import { OnectaOIDCCallbackServer } from './oidc-callback-server';
 import { RateLimitedError } from "../index";
 
 type RequestParameters = Parameters<typeof BaseClient.prototype.requestResource>[2] & {
@@ -23,7 +23,7 @@ type RequestParameters = Parameters<typeof BaseClient.prototype.requestResource>
 const ONE_DAY_S = 24 * 60 * 60;
 
 export class OnectaClient {
-    
+
     #config: OnectaClientConfig;
     #client: BaseClient;
     #tokenSet: TokenSet | null;
@@ -51,7 +51,7 @@ export class OnectaClient {
         if (!receiver || !redirectUri) {
             throw new Error('Config params "customOidcCodeReceiver" and "oidcCallbackServerBaseUrl" are both required when using a custom OIDC authorization grant receiver');
         }
-        const reqState = randomBytes(32).toString('hex');    
+        const reqState = randomBytes(32).toString('hex');
         const authUrl = this.#client.authorizationUrl({
             scope: OnectaOIDCScope.basic,
             state: reqState,
@@ -75,7 +75,7 @@ export class OnectaClient {
 
     async #authorize(): Promise<TokenSet> {
         const config = this.#config;
-        const { authCode, redirectUri } = config.customOidcCodeReceiver 
+        const { authCode, redirectUri } = config.customOidcCodeReceiver
             ? await this.#getAuthCodeWithCustomReceiver() : await this.#getAuthCodeWithServer();
         return await this.#client.grant({
             grant_type: 'authorization_code',

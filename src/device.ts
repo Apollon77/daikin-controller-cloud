@@ -249,4 +249,30 @@ export class DaikinCloudDevice extends EventEmitter<DaikinCloudDeviceEvents> {
         } as const;
         return this.#client.requestResource(setPath, setOptions);
     }
+
+    /**
+     * Set a datapoint on this device but don't send the action
+     *
+     * @param {string} managementPoint Management point name
+     * @param {string} dataPoint Datapoint name for management point
+     * @param {string} [dataPointPath] further detailed datapoints with subpath data, if needed
+     * @param {number|string} value Value to set
+     * @param {boolean} [ignoreWritableCheck=false] Ignore the writable check
+     * @returns {Promise<Object|boolean>} should return a true - or if a body is returned teh body object (can this happen?)
+     */
+    setLocalData(managementPoint: any, dataPoint: any, dataPointPath: any, value: any, ignoreWritableCheck = false) {
+        if (value === undefined) {
+            value = dataPointPath;
+            dataPointPath = undefined;
+        }
+
+        if (!this.managementPoints[managementPoint] || !this.managementPoints[managementPoint][dataPoint] || (dataPointPath && !this.managementPoints[managementPoint][dataPoint][dataPointPath])) {
+            throw new Error('Please provide a valid datapoint definition that exists in the data structure');
+        }
+
+        const dataPointDef = dataPointPath ? this.managementPoints[managementPoint][dataPoint][dataPointPath] : this.managementPoints[managementPoint][dataPoint];
+        this.#validateData(dataPointDef, value, ignoreWritableCheck);
+
+        dataPointDef.value = value;
+    }
 }

@@ -7,7 +7,7 @@ import { readFile } from 'node:fs/promises';
 
 import { address } from 'ip';
 
-import { OnectaClientConfig, onecta_oidc_auth_thank_you_html } from './oidc-utils.js';
+import { OnectaClientConfig, onecta_oidc_auth_thank_you_html } from './oidc-utils';
 import { AddressInfo } from 'node:net';
 
 export class OnectaOIDCCallbackServer {
@@ -50,14 +50,14 @@ export class OnectaOIDCCallbackServer {
             server.on('listening', onListening);
             server.on('error', onError);
             server.listen(
-                config.oidcCallbackServerPort ?? 0, 
+                config.oidcCallbackServerPort ?? 0,
                 config.oidcCallbackServerBindAddr ?? '0.0.0.0',
             );
         });
         let callbackUrl = config.oidcCallbackServerBaseUrl;
         if (!callbackUrl) {
             const oidcHostname = config.oidcCallbackServerExternalAddress ?? address('public');
-            const oidcPort = config.oidcCallbackServerPort ?? (server.address() as AddressInfo).port;    
+            const oidcPort = config.oidcCallbackServerPort ?? (server.address() as AddressInfo).port;
             callbackUrl = `https://${oidcHostname}:${oidcPort}`;
         }
         this.#server = server;

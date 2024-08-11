@@ -161,6 +161,17 @@ export class DaikinCloudDevice extends EventEmitter<DaikinCloudDeviceEvents> {
     }
 
     /**
+     * Get all management points by type
+     * The full internal data structure is returned
+     *
+     * @param {string} [managementPointType] Management point type
+     * @returns {array} Data objects
+     */
+    getManagementPointByType(managementPointType: string) {
+        return Object.values(this.managementPoints).filter((managementPoint: any) => managementPoint.managementPointType === managementPointType);
+    }
+
+    /**
      * Update the data of this device from the cloud
      *
      * @returns {Promise<boolean>}

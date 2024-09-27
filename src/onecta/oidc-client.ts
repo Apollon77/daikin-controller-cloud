@@ -3,7 +3,7 @@ import { IncomingMessage } from 'node:http';
 import { readFile, writeFile } from 'node:fs/promises';
 import { EventEmitter } from 'node:events';
 import { randomBytes } from 'node:crypto';
-import { BaseClient, TokenSet } from 'openid-client';
+import { BaseClient, TokenSet, custom } from 'openid-client';
 import {
     OnectaOIDCScope,
     OnectaAPIBaseUrl,
@@ -22,8 +22,12 @@ type RequestParameters = Parameters<typeof BaseClient.prototype.requestResource>
 
 const ONE_DAY_S = 24 * 60 * 60;
 
+custom.setHttpOptionsDefaults({
+    timeout: 10_000, // Default 3.5s is too less sometimes as it seems
+});
+
 export class OnectaClient {
-    
+
     #config: OnectaClientConfig;
     #client: BaseClient;
     #tokenSet: TokenSet | null;
@@ -51,7 +55,7 @@ export class OnectaClient {
         if (!receiver || !redirectUri) {
             throw new Error('Config params "customOidcCodeReceiver" and "oidcCallbackServerBaseUrl" are both required when using a custom OIDC authorization grant receiver');
         }
-        const reqState = randomBytes(32).toString('hex');    
+        const reqState = randomBytes(32).toString('hex');
         const authUrl = this.#client.authorizationUrl({
             scope: OnectaOIDCScope.basic,
             state: reqState,
@@ -75,7 +79,7 @@ export class OnectaClient {
 
     async #authorize(): Promise<TokenSet> {
         const config = this.#config;
-        const { authCode, redirectUri } = config.customOidcCodeReceiver 
+        const { authCode, redirectUri } = config.customOidcCodeReceiver
             ? await this.#getAuthCodeWithCustomReceiver() : await this.#getAuthCodeWithServer();
         return await this.#client.grant({
             grant_type: 'authorization_code',

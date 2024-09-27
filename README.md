@@ -97,6 +97,10 @@ See [`src/example.ts`](./src/example.ts).
 * Add Tests
 
 ## Changelog:
+
+### __WORK IN PROGRESS__
+* (Apollon77) Increase timeout for openid client to 10s (3.5s before)
+
 ### 2.4.0 (2024-07-17)
 * (Apollon77) Allows to ignore the check if a state is writable on setData
 

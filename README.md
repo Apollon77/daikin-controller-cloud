@@ -97,8 +97,7 @@ See [`src/example.ts`](./src/example.ts).
 * Add Tests
 
 ## Changelog:
-
-### __WORK IN PROGRESS__
+### 2.4.1 (2024-09-27)
 * (Apollon77) Increase timeout for openid client to 10s (3.5s before)
 
 ### 2.4.0 (2024-07-17)

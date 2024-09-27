@@ -97,8 +97,7 @@ See [`src/example.ts`](./src/example.ts).
 * Add Tests
 
 ## Changelog:
-
-### __WORK IN PROGRESS__
+### 2.4.2 (2024-09-27)
 * (Apollon77) Use 5min as default for oidcAuthorizationTimeoutS if not set
 
 ### 2.4.1 (2024-09-27)

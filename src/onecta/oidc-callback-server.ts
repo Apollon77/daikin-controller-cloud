@@ -50,14 +50,14 @@ export class OnectaOIDCCallbackServer {
             server.on('listening', onListening);
             server.on('error', onError);
             server.listen(
-                config.oidcCallbackServerPort ?? 0, 
+                config.oidcCallbackServerPort ?? 0,
                 config.oidcCallbackServerBindAddr ?? '0.0.0.0',
             );
         });
         let callbackUrl = config.oidcCallbackServerBaseUrl;
         if (!callbackUrl) {
             const oidcHostname = config.oidcCallbackServerExternalAddress ?? address('public');
-            const oidcPort = config.oidcCallbackServerPort ?? (server.address() as AddressInfo).port;    
+            const oidcPort = config.oidcCallbackServerPort ?? (server.address() as AddressInfo).port;
             callbackUrl = `https://${oidcHostname}:${oidcPort}`;
         }
         this.#server = server;
@@ -111,7 +111,7 @@ export class OnectaOIDCCallbackServer {
                 }
                 res.end();
             };
-            setTimeout(onTimeout, config.oidcAuthorizationTimeoutS * 1000);
+            setTimeout(onTimeout, (config.oidcAuthorizationTimeoutS || 300) * 1000);
             server.on('request', onRequest);
             server.on('error', onError);
         });

@@ -43,7 +43,7 @@ export interface OnectaClientConfig {
     oidcCallbackServerBaseUrl?: string;
     oidcCallbackServerPort?: number;
     oidcCallbackServerBindAddr?: string;
-    oidcAuthorizationTimeoutS: number;
+    oidcAuthorizationTimeoutS?: number;
     oidcTokenSetFilePath?: string;
     certificatePathCert?: string;
     certificatePathKey?: string;

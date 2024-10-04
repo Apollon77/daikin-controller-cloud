@@ -5,6 +5,19 @@ interface DaikinCloudDeviceEvents {
     "updated": [];
 }
 
+type SetDataOptions = {
+    /**
+     * If true, the writable check "settable" will be ignored.
+     * @default false
+     */
+    ignoreWritableCheck?: boolean;
+    /**
+     * If true, the local Device data will be updated without waiting for a new cloud update
+     * @default false
+     */
+    updateLocalData?: boolean
+}
+
 /**
  * Class to represent and control one Daikin Cloud Device
  */
@@ -219,10 +232,18 @@ export class DaikinCloudDevice extends EventEmitter<DaikinCloudDeviceEvents> {
      * @param {string} dataPoint Datapoint name for management point
      * @param {string} [dataPointPath] further detailed datapoints with subpath data, if needed
      * @param {number|string} value Value to set
-     * @param {boolean} [ignoreWritableCheck=false] Ignore the writable check
+     * @param {SetDataOptions|boolean} options Options object for setData
      * @returns {Promise<Object|boolean>} should return a true - or if a body is returned teh body object (can this happen?)
      */
-    async setData(managementPoint: any, dataPoint: any, dataPointPath: any, value: any, ignoreWritableCheck = false) {
+    async setData(managementPoint: any, dataPoint: any, dataPointPath: any, value: any, options: SetDataOptions | boolean = { ignoreWritableCheck: false, updateLocalData: false }) {
+        if (typeof options === 'boolean') {
+            console.warn('ignoreWritableCheck is deprecated and replaced with an options object. Please provide a SetDataOptions object for setData()');
+            options = {
+                ignoreWritableCheck: options,
+                updateLocalData: false
+            }
+        }
+
         if (value === undefined) {
             value = dataPointPath;
             dataPointPath = undefined;
@@ -233,7 +254,7 @@ export class DaikinCloudDevice extends EventEmitter<DaikinCloudDeviceEvents> {
         }
 
         const dataPointDef = dataPointPath ? this.managementPoints[managementPoint][dataPoint][dataPointPath] : this.managementPoints[managementPoint][dataPoint];
-        this.#validateData(dataPointDef, value, ignoreWritableCheck);
+        this.#validateData(dataPointDef, value, options.ignoreWritableCheck);
 
         const setPath =  '/v1/gateway-devices/' + this.getId() + '/management-points/' + managementPoint + '/characteristics/' + dataPoint;
         const setBody = {
@@ -247,6 +268,11 @@ export class DaikinCloudDevice extends EventEmitter<DaikinCloudDeviceEvents> {
                 'Content-Type': 'application/json'
             }
         } as const;
-        return this.#client.requestResource(setPath, setOptions);
+
+        const response = this.#client.requestResource(setPath, setOptions);
+        if (options.updateLocalData) {
+            dataPointDef.value = value;
+        }
+        return response;
     }
 }

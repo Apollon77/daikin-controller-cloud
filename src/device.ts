@@ -5,7 +5,7 @@ interface DaikinCloudDeviceEvents {
     "updated": [];
 }
 
-type setDataOptions = {
+type SetDataOptions = {
     /**
      * If true, the writable check "settable" will be ignored.
      * @default false
@@ -232,12 +232,12 @@ export class DaikinCloudDevice extends EventEmitter<DaikinCloudDeviceEvents> {
      * @param {string} dataPoint Datapoint name for management point
      * @param {string} [dataPointPath] further detailed datapoints with subpath data, if needed
      * @param {number|string} value Value to set
-     * @param {setDataOptions|boolean} options Options object for setData
+     * @param {SetDataOptions|boolean} options Options object for setData
      * @returns {Promise<Object|boolean>} should return a true - or if a body is returned teh body object (can this happen?)
      */
-    async setData(managementPoint: any, dataPoint: any, dataPointPath: any, value: any, options: setDataOptions | boolean = { ignoreWritableCheck: false, updateLocalData: false }) {
+    async setData(managementPoint: any, dataPoint: any, dataPointPath: any, value: any, options: SetDataOptions | boolean = { ignoreWritableCheck: false, updateLocalData: false }) {
         if (typeof options === 'boolean') {
-            console.warn('ignoreWritableCheck is deprecated and replaced with an options object. Please provide a setDataOptions object for setData()');
+            console.warn('ignoreWritableCheck is deprecated and replaced with an options object. Please provide a SetDataOptions object for setData()');
             options = {
                 ignoreWritableCheck: options,
                 updateLocalData: false

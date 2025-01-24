@@ -97,6 +97,12 @@ See [`src/example.ts`](./src/example.ts).
 * Add Tests
 
 ## Changelog:
+### 2.4.2 (2024-09-27)
+* (Apollon77) Use 5min as default for oidcAuthorizationTimeoutS if not set
+
+### 2.4.1 (2024-09-27)
+* (Apollon77) Increase timeout for openid client to 10s (3.5s before)
+
 ### 2.4.0 (2024-07-17)
 * (Apollon77) Allows to ignore the check if a state is writable on setData
 

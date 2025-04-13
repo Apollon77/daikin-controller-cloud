@@ -69,3 +69,5 @@ export class DaikinCloudController extends EventEmitter<DaikinCloudControllerEve
         });
     }
 }
+
+export { DAIKIN_MANAGEMENT_POINT_TYPES } from './values';

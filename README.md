@@ -97,6 +97,10 @@ See [`src/example.ts`](./src/example.ts).
 * Add Tests
 
 ## Changelog:
+
+### __WORK IN PROGRESS__
+* (@Apollon77) Fixed timeout handling for OpenId Authorization flow
+
 ### 2.4.2 (2024-09-27)
 * (Apollon77) Use 5min as default for oidcAuthorizationTimeoutS if not set
 

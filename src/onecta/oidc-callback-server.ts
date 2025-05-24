@@ -111,7 +111,7 @@ export class OnectaOIDCCallbackServer {
                 }
                 res.end();
             };
-            setTimeout(onTimeout, (config.oidcAuthorizationTimeoutS || 300) * 1000);
+            timeout = setTimeout(onTimeout, (config.oidcAuthorizationTimeoutS || 300) * 1000);
             server.on('request', onRequest);
             server.on('error', onError);
         });

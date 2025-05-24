@@ -97,8 +97,7 @@ See [`src/example.ts`](./src/example.ts).
 * Add Tests
 
 ## Changelog:
-
-### __WORK IN PROGRESS__
+### 2.4.3 (2025-05-24)
 * (@Apollon77) Fixed timeout handling for OpenId Authorization flow
 
 ### 2.4.2 (2024-09-27)

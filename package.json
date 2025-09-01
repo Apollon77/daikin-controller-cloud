@@ -14,7 +14,7 @@
   },
   "dependencies": {
     "ip": "^2.0.1",
-    "openid-client": "^5.7.1"
+    "openid-client": "^6.7.1"
   },
   "devDependencies": {
     "@alcalzone/release-script": "^3.8.0",

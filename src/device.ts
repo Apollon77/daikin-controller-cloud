@@ -1,4 +1,5 @@
 import type { OnectaClient } from './onecta/oidc-client.js';
+import type { ManagementPoint, ManagementPointType } from "./types";
 import { EventEmitter } from "events";
 
 interface DaikinCloudDeviceEvents {
@@ -171,6 +172,17 @@ export class DaikinCloudDevice extends EventEmitter<DaikinCloudDeviceEvents> {
 
         // return data for managementPoint and dataPoint and dataPointPath
         return this.managementPoints[managementPoint][dataPoint][dataPointPath];
+    }
+
+    /**
+     * Get all management points by type
+     * The full internal data structure is returned
+     *
+     * @param {ManagementPointType} [managementPointType] Management point type
+     * @returns {ManagementPoint[]} Array of ManagementPoint objects
+     */
+    getManagementPointsByType(managementPointType: ManagementPointType): ManagementPoint[] {
+        return this.desc.managementPoints.filter((managementPoint: ManagementPoint) => managementPoint.managementPointType === managementPointType);
     }
 
     /**

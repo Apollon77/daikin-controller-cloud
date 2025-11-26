@@ -16,6 +16,16 @@ export enum OnectaOIDCEndpoint {
     introspection = 'https://idp.onecta.daikineurope.com/v1/oidc/introspect',
 }
 
+export enum OnectaMockDevice {
+    airToAirDx23 = 'air-to-air-dx23',
+    airToAirDx4 = 'air-to-air-dx4',
+    airPurifierWithHumidifier = 'airpurifier-with-humidifier',
+    airPurifier = 'airpurifier',
+    althermaAirToWaterLan = 'altherma-air-to-water-lan',
+    althermaAirToWaterWlan = 'altherma-air-to-water-wlan',
+    d2cndGasBoiler = 'd2cnd-gas-boiler',
+}
+
 export const onecta_oidc_issuer = new Issuer({
     issuer: 'Daikin',
     authorization_endpoint: OnectaOIDCEndpoint.authorization,
@@ -50,6 +60,8 @@ export interface OnectaClientConfig {
     onectaOidcAuthThankYouHtml?: string;
     customOidcCodeReceiver?: (auth_url: string, state: string) => Promise<string>;
     tokenSet?: TokenSet;
+    useMock?: boolean;
+    mockId?: string | OnectaMockDevice;
 }
 
 export interface OnectaRateLimitStatus {

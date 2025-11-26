@@ -1,7 +1,7 @@
 
 import { homedir } from 'node:os';
 import { resolve } from 'node:path';
-import { DaikinCloudController } from './index';
+import { DaikinCloudController, OnectaMockDevice } from './index';
 
 // ============================================================================
 // Read OIDC client credentials as environment variables.
@@ -25,6 +25,10 @@ const controller = new DaikinCloudController({
     oidcClientId: oidc_client_id,
     /* OIDC client secret */
     oidcClientSecret: oidc_client_secret,
+    /* Mock mode */
+    // useMock: true,
+    /* Mock device to use */
+    // mockId: OnectaMockDevice.airPurifier,
     /* Network interface that the HTTP server should bind to. Bind to all interfaces for convenience, please limit as needed to single interfaces! */
     // oidcCallbackServerBindAddr: '0.0.0.0',
     /* port that the HTTP server should bind to */

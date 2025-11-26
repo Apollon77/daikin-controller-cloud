@@ -79,8 +79,26 @@ controller.on('rate_limit_status', (rateLimitStatus) => {
     // See https://developer.cloud.daikineurope.com/spec/b0dffcaa-7b51-428a-bdff-a7c8a64195c0/70b10aca-1b4c-470b-907d-56879784ea9c
     // ==========================================================================
 
-    const devices = await controller.getCloudDeviceDetails();
-    console.log(devices);
+    const devices = await controller.getCloudDevices();
+    if (devices.length > 0) {
+        const device = devices[0];
+        console.log(`Device: ${device.getId()}`);
+        console.log(`Description: ${JSON.stringify(device.desc, null, 2)}`);
+
+        // Check for firmware update
+        if (device.isFirmwareUpdateAvailable()) {
+            const details = device.getFirmwareUpdateDetails();
+            console.log(`Firmware update available: ${details.version} (${details.type})`);
+            console.log(`Description: ${details.description}`);
+            
+            // Uncomment to perform update
+            // console.log("Starting firmware update...");
+            // await device.updateFirmware();
+            // console.log("Firmware update started.");
+        } else {
+            console.log("No firmware update available.");
+        }
+    }
 
 })().catch(console.error);
 

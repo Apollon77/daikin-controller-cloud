@@ -1,8 +1,10 @@
 import { EventEmitter } from 'events';
 import { DaikinCloudDevice } from './device.js';
 import { OnectaClient } from './onecta/oidc-client.js';
-import { OnectaClientConfig, OnectaRateLimitStatus } from './onecta/oidc-utils.js';
+import { OnectaClientConfig, OnectaRateLimitStatus, OnectaMockDevice } from './onecta/oidc-utils.js';
 import { TokenSet } from "openid-client";
+
+export { OnectaClientConfig, OnectaRateLimitStatus, TokenSet, OnectaMockDevice };
 
 interface DaikinCloudControllerEvents {
     "error": [err: Error];

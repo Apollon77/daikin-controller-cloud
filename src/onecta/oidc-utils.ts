@@ -58,7 +58,7 @@ export interface OnectaClientConfig {
     certificatePathCert?: string;
     certificatePathKey?: string;
     onectaOidcAuthThankYouHtml?: string;
-    customOidcCodeReceiver?: (authorizeUrl: string, state: string) => Promise<string>;
+    customOidcCodeReceiver?: (auth_url: string, state: string) => Promise<string>;
     tokenSet?: TokenSet;
     useMock?: boolean;
     mockId?: string | OnectaMockDevice;

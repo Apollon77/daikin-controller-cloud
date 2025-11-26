@@ -86,6 +86,8 @@ See [`src/example.ts`](./src/example.ts).
 | `onectaOidcAuthThankYouHtml`        | No              | The HTML content to be displayed after successful OIDC authorization, requiored when `customOidcCodeReceiver` is not used                                                                                                         |                                   |
 | `customOidcCodeReceiver`            | No              | A custom function to receive the OIDC code. WHen this is used the library donot start any Webservcer and application needs to handle this.                                                                                        |                                   |
 | `tokenSet`                          | No              | A token set to be used initially when no token file is stored                                                                                                                                                                     |                                   |
+| `useMock`                           | No              | Set to true to use the Daikin Mock API instead of the production API                                                                                                                                                              | `false`                           |
+| `mockId`                            | No              | The ID of the mock device to use (e.g., 'air-to-air-dx23'). See Daikin documentation for available IDs.                                                                                                                           |                                   |
 
 ## Issue reporting and enhancements
 * Create Issues here in Github

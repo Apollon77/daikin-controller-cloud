@@ -69,6 +69,31 @@ SSL/TLS certificate, which will cause your browser to present you with a securit
 ## Code-Usage example
 See [`src/example.ts`](./src/example.ts).
 
+## Firmware Updates
+
+The library supports checking for and triggering remote firmware updates for the gateway devices.
+
+### Checking for updates
+
+You can check if a firmware update is available for a device:
+
+```typescript
+if (device.isFirmwareUpdateAvailable()) {
+    const details = device.getFirmwareUpdateDetails();
+    console.log(`Update available: ${details.version}`);
+}
+```
+
+### Performing an update
+
+To trigger an update:
+
+```typescript
+await device.updateFirmware();
+```
+
+**Note:** During a firmware update, the device will reboot and go offline temporarily. The `firmwareUpdateStatus` characteristic will indicate the progress (`in-progress` or `succeeded`).
+
 ## DaikinControllerCloud options overview
 
 | Option                              | Required?       | Description                                                                                                                                                                                                                       | Default                           |
@@ -86,6 +111,8 @@ See [`src/example.ts`](./src/example.ts).
 | `onectaOidcAuthThankYouHtml`        | No              | The HTML content to be displayed after successful OIDC authorization, requiored when `customOidcCodeReceiver` is not used                                                                                                         |                                   |
 | `customOidcCodeReceiver`            | No              | A custom function to receive the OIDC code. WHen this is used the library donot start any Webservcer and application needs to handle this.                                                                                        |                                   |
 | `tokenSet`                          | No              | A token set to be used initially when no token file is stored                                                                                                                                                                     |                                   |
+| `useMock`                           | No              | Set to true to use the Daikin Mock API instead of the production API                                                                                                                                                              | `false`                           |
+| `mockId`                            | No              | The ID of the mock device to use (e.g., 'air-to-air-dx23'). See Daikin documentation for available IDs.                                                                                                                           |                                   |
 
 ## Issue reporting and enhancements
 * Create Issues here in Github

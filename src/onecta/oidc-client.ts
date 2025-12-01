@@ -176,8 +176,15 @@ export class OnectaClient {
         }
         const reqOpts = { ...opts };
         delete reqOpts.ignoreRateLimit;
+        if (this.#config.mockId) {
+            reqOpts.headers = {
+                ...reqOpts.headers,
+                'X-Mocking-Example-Id': this.#config.mockId,
+            };
+        }
         const tokenSet = await this.#getTokenSetQueued();
-        const url = `${OnectaAPIBaseUrl.prod}${path}`;
+        const baseUrl = this.#config.useMock ? OnectaAPIBaseUrl.mock : OnectaAPIBaseUrl.prod;
+        const url = `${baseUrl}${path}`;
         const res = await this.#client.requestResource(url, tokenSet, reqOpts);
         RESOLVED.then(() => this.#emitter.emit('rate_limit_status', this.#getRateLimitStatus(res)));
         switch (res.statusCode) {

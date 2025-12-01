@@ -275,4 +275,63 @@ export class DaikinCloudDevice extends EventEmitter<DaikinCloudDeviceEvents> {
         }
         return response;
     }
+
+    /**
+     * Check if a firmware update is available
+     * @returns {boolean} true if update is available
+     */
+    isFirmwareUpdateAvailable(): boolean {
+        const gateway = this.managementPoints['gateway'];
+        if (!gateway) return false;
+
+        // Check if firmwareUpdate characteristic exists and has a value
+        return !!(gateway.firmwareUpdate && gateway.firmwareUpdate.value);
+    }
+
+    /**
+     * Get firmware update details if available
+     * @returns {object|null} Firmware update details or null
+     */
+    getFirmwareUpdateDetails(): any {
+        const gateway = this.managementPoints['gateway'];
+        if (!gateway || !gateway.firmwareUpdate) return null;
+        return gateway.firmwareUpdate.value;
+    }
+
+    /**
+     * Get the status of the firmware update
+     * @returns {string|null} 'in-progress', 'succeeded' or null if not active
+     */
+    getFirmwareUpdateStatus(): string | null {
+        const gateway = this.managementPoints['gateway'];
+        if (!gateway || !gateway.firmwareUpdateStatus) return null;
+        return gateway.firmwareUpdateStatus.value;
+    }
+
+    /**
+     * Trigger a firmware update
+     * @returns {Promise<void>}
+     */
+    async updateFirmware(): Promise<void> {
+        const gateway = this.managementPoints['gateway'];
+        if (!gateway) {
+            throw new Error('Gateway management point not found');
+        }
+
+        const firmwareUpdate = gateway.firmwareUpdate;
+        if (!firmwareUpdate || !firmwareUpdate.value || !firmwareUpdate.value.id) {
+            throw new Error('No firmware update available');
+        }
+
+        const gatewayDeviceId = this.desc.id;
+        const embeddedId = 'gateway'; // As per docs and typical structure
+        const firmwareId = firmwareUpdate.value.id;
+
+        await this.#client.requestResource(
+            `/v1/gateway-devices/${gatewayDeviceId}/management-points/${embeddedId}/firmware/${firmwareId}`,
+            {
+                method: 'PUT'
+            }
+        );
+    }
 }
